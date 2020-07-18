@@ -13,7 +13,7 @@ class TemplateInfo{
 
   factory TemplateInfo.fromJson(Map<String, dynamic> json){
     return TemplateInfo(
-        templateCode: json['templateCode'],
+        templateCode: json['templateCode'].toString(),
         author: json['author'],
         templateName: json['templateName'],
         bookPrice: json['bookPrice'],

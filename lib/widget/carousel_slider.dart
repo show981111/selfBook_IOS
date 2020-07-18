@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:selfbookflutter/Api/Api.dart';
-import 'package:selfbookflutter/fetchData/fetchTemplateInfo.dart';
+import 'package:selfbookflutter/fetchData/fetch_template_info.dart';
 import 'package:selfbookflutter/model/template.dart';
 
 
@@ -35,7 +35,7 @@ class _CarouselImageState extends State<CarouselImage> {
             );
           }else if(snapshot.hasError){
             return Container(
-            child: Text('error'),
+              child: Text('error'),
             );
           }else{
             templates = snapshot.data;
@@ -66,7 +66,7 @@ class _CarouselImageState extends State<CarouselImage> {
             }
             print("TL" + templates.length.toString());
             print("L" + networkImages.length.toString());
-            return Container(
+            return new Container(
               child: Column(
                 children: <Widget>[
                   Container(

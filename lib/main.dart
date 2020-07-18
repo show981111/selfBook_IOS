@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:selfbookflutter/screen/home_screen.dart';
+import 'package:selfbookflutter/screen/login_screen.dart';
 import 'package:selfbookflutter/widget/bottom_bar.dart';
 
 void main() {
@@ -11,8 +12,15 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp>{
+class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin{
   TabController controller;
+
+  @override
+  void initState() {
+    controller =  new TabController(vsync: this, length: 3);
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -25,15 +33,7 @@ class _MyAppState extends State<MyApp>{
       home : DefaultTabController(
         length: 3,
         child: Scaffold(
-          body: TabBarView(
-            physics: NeverScrollableScrollPhysics(),
-            children : <Widget>[
-              Container(child: Center(child : Text('preview')),),
-              HomeScreen(),
-              Container(child: Center(child : Text('login')),),
-            ],
-          ),
-          bottomNavigationBar: Bottom(),
+          body: HomeScreen(),
         ),
       ),
     );

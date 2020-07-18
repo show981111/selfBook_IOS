@@ -14,7 +14,6 @@ Future<List<TemplateInfo>> getTemplateInfoList() async{
     var result = json.decode(response.body);
     for(int i = 0; i < result.length ; i++)
     {
-
       TemplateInfo templateItem = TemplateInfo.fromJson(result[i]);
       templateInfoList.add(templateItem);
       print(templateItem.templateName);
