@@ -5,15 +5,13 @@ import 'package:selfbookflutter/Api/Api.dart';
 import 'package:selfbookflutter/model/template.dart';
 import 'package:http/http.dart' as http;
 
-Future<String> putUserAnswer(BuildContext context ,String key, String userID, String input, String from) async{
+Future<String> skipDelegate(BuildContext context ,String key, String userID) async{
 
   Map data = {
-    'key' : key,
     'userID' : userID,
-    'input' : input,
-    'from' : from
+    'delegateCode' : key
   };
-  var response = await http.post(API.POST_SETUSERANSWER, body: data);
+  var response = await http.post(API.POST_SKIPDELEGATE, body: data);
   if(response.statusCode == 200 && response.body.isNotEmpty){
     print(response.body);
 
@@ -24,6 +22,6 @@ Future<String> putUserAnswer(BuildContext context ,String key, String userID, St
       return Future.error('upload fail');
     }
   }else{
-    return Future.error('loading fail');
+    return Future.error('connection fail');
   }
 }

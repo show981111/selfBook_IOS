@@ -24,7 +24,8 @@ class _HomeScreenState extends State<HomeScreen>{
       children: <Widget>[
         Stack(
           children: <Widget>[
-            CarouselImage(),
+            CarouselImage(userInfo: widget.userInfoList != null &&  widget.userInfoList.length > 0 ?
+                widget.userInfoList[0] : null),
           ],
         ),
 //        CircleSlider(movies: movies,),
@@ -35,3 +36,5 @@ class _HomeScreenState extends State<HomeScreen>{
     );
   }
 }
+
+

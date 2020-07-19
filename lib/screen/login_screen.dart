@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:selfbookflutter/Api/Api.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/screen/home_screen.dart';
+import 'package:selfbookflutter/screen/register_screen.dart';
 import 'dart:convert';
 
 import 'package:selfbookflutter/widget/show_dialog.dart';
@@ -16,7 +17,13 @@ class _LoginScreenState extends State<LoginScreen>{
   TextEditingController idController = new TextEditingController();
   TextEditingController passwordController = new TextEditingController();
   List<UserInfo> userInfoList = new List<UserInfo>();
-  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    idController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   void initState() {
@@ -55,13 +62,15 @@ class _LoginScreenState extends State<LoginScreen>{
                   controller: idController,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
-                    labelText: '아이디',
+                    labelText: '아이디(이메일)',
+                    hintText: 'selfBook@gmail.com'
                   )
               ),
             ),
             Padding(
               padding: EdgeInsets.all(8),
               child: TextField(
+                obscureText : true,
                 controller: passwordController,
                 decoration: InputDecoration(
                   border: OutlineInputBorder(),
@@ -83,9 +92,6 @@ class _LoginScreenState extends State<LoginScreen>{
                       color: Color.fromRGBO(96, 128, 104, 100),
                       textColor: Colors.white,
                       onPressed: () {
-                        setState(() {
-                          _isLoading = true;
-                        });
                         login(context, idController.text, passwordController.text)
                             .catchError((e) {
                           print("Got error: ${e}");     // Finally, callback fires.
@@ -116,19 +122,11 @@ class _LoginScreenState extends State<LoginScreen>{
                       color: Color.fromRGBO(96, 128, 104, 100),
                       textColor: Colors.white,
                       onPressed: () {
-                        setState(() {
-                          _isLoading = true;
-                        });
-//                        login(context, idController.text, passwordController.text, _token)
-//                            .catchError((e) {
-//                          print("Got error: ${e}");     // Finally, callback fires.
-//                          if(e == 'loginFail'){
-//                            showMyDialog(context, '아이디와 비밀번호를 다시 확인해주세요!');
-//                          }else{
-//                            showMyDialog(context, '인터넷 연결을 확인해주세요!');
-//                          }
-//                        });
-                        //print(e);
+                        Navigator.of(context).push(MaterialPageRoute<Null>(
+                            builder: (BuildContext context) {
+                              return RegisterScreen();
+                            }
+                        ));
                       },
                     ),
                   )
@@ -149,19 +147,8 @@ class _LoginScreenState extends State<LoginScreen>{
                       color: Color.fromRGBO(96, 128, 104, 100),
                       textColor: Colors.white,
                       onPressed: () {
-                        setState(() {
-                          _isLoading = true;
-                        });
-//                        login(context, idController.text, passwordController.text, _token)
-//                            .catchError((e) {
-//                          print("Got error: ${e}");     // Finally, callback fires.
-//                          if(e == 'loginFail'){
-//                            showMyDialog(context, '아이디와 비밀번호를 다시 확인해주세요!');
-//                          }else{
-//                            showMyDialog(context, '인터넷 연결을 확인해주세요!');
-//                          }
-//                        });
-                        //print(e);
+
+
                       },
                     ),
                   )
@@ -211,19 +198,3 @@ Future<List<UserInfo>> login(BuildContext context ,String userID, String passwor
     return Future.error('loading fail');
   }
 }
-
-
-
-//Future<Post> fetchPost() async {
-//  final response = await http.get('https://jsonplaceholder.typicode.com/posts/1');
-//
-//  if (response.statusCode == 200) {
-//    // 만약 서버가 OK 응답을 반환하면, JSON을 파싱합니다.
-//    return Post.fromJson(json.decode(response.body));
-//  } else {
-//    // 만약 응답이 OK가 아니면, 에러를 던집니다.
-//    throw Exception('Failed to load post');
-//  }
-//}
-//
-

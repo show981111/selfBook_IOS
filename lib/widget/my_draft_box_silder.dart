@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:selfbookflutter/Api/Api.dart';
+import 'package:selfbookflutter/handler/lifecycle_handler.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/screen/login_screen.dart';
 import 'package:selfbookflutter/screen/my_draft_screen.dart';
 
-class BoxSlider extends StatelessWidget {
-  List<UserInfo> userInfoList;
+class BoxSlider extends StatefulWidget {
+  final List<UserInfo> userInfoList;
   BoxSlider({this.userInfoList});
+  _BoxSlider createState() => _BoxSlider();
+
+}
+
+class _BoxSlider extends State<BoxSlider>{
+
+  @override
+  void initState() {
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,14 +27,28 @@ class BoxSlider extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Text('내가 구매한 원고', style: TextStyle(fontWeight: FontWeight.bold),),
-          setSlider(context, userInfoList)
+          setSlider(context, widget.userInfoList),
+          widget.userInfoList != null && widget.userInfoList.isNotEmpty ?
+              Padding(
+                padding: EdgeInsets.all(10),
+                child : Center(
+                  child: InkWell(
+                    child: Text('탭하여 로그아웃'),
+                    onTap: () {
+                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
+                          (BuildContext context) => LoginScreen()), (
+                          Route<dynamic> route) => false);
+                    } ,
+                  ),
+                )
+              )
+              : Container()
         ],
       ),
     );
   }
 
 }
-
 Widget setSlider(BuildContext context, List<UserInfo> userInfoList){
 
   if(userInfoList != null && userInfoList.isNotEmpty){
@@ -53,22 +78,6 @@ Widget setSlider(BuildContext context, List<UserInfo> userInfoList){
         } ,
       ),
 
-//      child: FlatButton(
-//        shape: new RoundedRectangleBorder(
-//          borderRadius: new BorderRadius.circular(30.0),
-//        ),
-//        child: Text('로그인', style: TextStyle(fontSize: 15),),
-//        color: Color.fromRGBO(96, 128, 104, 100),
-//        textColor: Colors.white,
-//        onPressed: () {
-//          Navigator.of(context).push(MaterialPageRoute<Null>(
-//              fullscreenDialog: true,
-//              builder: (BuildContext context) {
-//                return LoginScreen();
-//              }
-//          ));
-//        },
-//      ) ,
     );
   }
 }
@@ -79,13 +88,6 @@ List<Widget> makeBoxImages(BuildContext context, List<UserInfo> userInfoList){
   {
     print('BOX' + userInfoList.toString() + userInfoList[0].userBookCover);
     results.add(
-//        Ink.image(
-//          image:  NetworkImage(API.GET_IMAGEBASEURL + userInfoList[i].userBookCover),
-//          fit: BoxFit.cover,
-//          child: InkWell(
-//            onTap: () {},
-//          ),
-//        )
         InkWell(
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute<Null>(

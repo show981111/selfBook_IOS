@@ -67,7 +67,7 @@ List<Widget> chapterGrid(BuildContext context, List<Chapter> chapterList, UserIn
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute<Null>(
                 builder: (BuildContext context) {
-                  return DelegateListScreen(userInfo, chapterList[i].id);
+                  return DelegateListScreen(userInfo, chapterList[i].id, "CH." + (i+1).toString());
                 }
             ));
           },

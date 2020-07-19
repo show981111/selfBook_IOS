@@ -5,36 +5,36 @@ import 'package:selfbookflutter/model/question.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/widget/basic_draft_info.dart';
 import 'package:selfbookflutter/widget/chapter_grid.dart';
+import 'package:selfbookflutter/widget/detail_list.dart';
 import 'package:selfbookflutter/widget/question_list.dart';
 
-class DelegateListScreen extends StatefulWidget {
+class DetailScreen extends StatefulWidget {
   final UserInfo userInfo;
-  final String chapterCode;
-  final String title;
-  DelegateListScreen(this.userInfo, this.chapterCode, this.title);
-  _DelegateListScreen createState() => _DelegateListScreen();
+  final String delegateCode;
+  DetailScreen(this.userInfo, this.delegateCode);
+  _DetailScreen createState() => _DetailScreen();
 }
 
-class _DelegateListScreen extends State<DelegateListScreen>{
+class _DetailScreen extends State<DetailScreen>{
   Map _data;
-  List<Question> delegateList;
-  final SlidableController slidableController = SlidableController();
+  List<Question> detailList;
   @override
   void initState() {
     _data = {
       'userID' : widget.userInfo.userID,
-      'chapterCode' : widget.chapterCode
+      'delegateCode' : widget.delegateCode
     };
+    print(widget.delegateCode);
     super.initState();
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text(widget.title),
+          title: Text('더보기'),
         ),
         body: FutureBuilder(
-          future: getQuestionList(_data, 'delegate'),
+          future: getQuestionList(_data, 'detail'),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if(snapshot.hasData == false){
               return Center(
@@ -45,8 +45,8 @@ class _DelegateListScreen extends State<DelegateListScreen>{
                   child: Text("에러가 발생하였습니다!")
               );
             }else{
-              delegateList = snapshot.data;
-              return QuestionList(widget.userInfo ,delegateList);
+              detailList = snapshot.data;
+              return DetailList(widget.userInfo ,detailList);
             }
           }
         )

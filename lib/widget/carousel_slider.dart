@@ -3,9 +3,17 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:selfbookflutter/Api/Api.dart';
 import 'package:selfbookflutter/fetchData/fetch_template_info.dart';
 import 'package:selfbookflutter/model/template.dart';
+import 'package:selfbookflutter/model/userInfo.dart';
+import 'package:selfbookflutter/screen/template_info_screen.dart';
+import 'package:selfbookflutter/widget/show_dialog.dart';
+import 'package:selfbookflutter/widget/show_purchase_dialog.dart';
 
 
 class CarouselImage extends StatefulWidget {
+  final UserInfo userInfo;
+
+  CarouselImage({this.userInfo});
+
   _CarouselImageState createState() => _CarouselImageState();
 
 }
@@ -64,8 +72,7 @@ class _CarouselImageState extends State<CarouselImage> {
                 ),
               ));
             }
-            print("TL" + templates.length.toString());
-            print("L" + networkImages.length.toString());
+
             return new Container(
               child: Column(
                 children: <Widget>[
@@ -114,7 +121,14 @@ class _CarouselImageState extends State<CarouselImage> {
 //                          padding: EdgeInsets.only(right : 10),
                           child: FlatButton(
                             color: Colors.white,
-                            onPressed: () {},
+                            onPressed: () {
+                              if(widget.userInfo == null ){
+                                showMyDialog(context, '먼저 로그인을 해주세요!');
+                                return;
+                              }
+                              showPurchaseDialog(context,templates[_currentPage].templateName+'를 구매하시겠습니까?\n가격 ' + templates[_currentPage].bookPrice + '원'
+                                  ,widget.userInfo.userID ,templates[_currentPage].templateCode);
+                            },
                             child : Row(
                               children: <Widget>[
                                 Icon(Icons.add_circle, color: Colors.black,),
@@ -130,14 +144,15 @@ class _CarouselImageState extends State<CarouselImage> {
                             IconButton(
                               icon: Icon(Icons.info),
                               onPressed: () {
-//                                Navigator.of(context).push(MaterialPageRoute<Null>(
-//                                    fullscreenDialog: true,
-//                                    builder: (BuildContext context) {
-//                                      return DetailScreen(
-//                                        movie : movies[_currentPage],
-//                                      );
-//                                    }
-//                                ));
+                                Navigator.of(context).push(MaterialPageRoute<Null>(
+                                    fullscreenDialog: true,
+                                    builder: (BuildContext context) {
+                                      return TemplateInfoScreen(
+                                        templateInfo: templates[_currentPage],
+                                        userInfo: widget.userInfo != null ? widget.userInfo : null,
+                                      );
+                                    }
+                                ));
                               },
                             ),
                             Text(

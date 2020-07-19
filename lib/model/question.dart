@@ -11,8 +11,8 @@ class Question extends Chapter{
   final String id;
   final String name;
   final String hint;
-  final String answer;
-  final String status;
+  String answer;
+  String status;
 
   Question({this.id, this.name, this.hint, this.answer, this.status});
 
