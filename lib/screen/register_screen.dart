@@ -138,40 +138,35 @@ class _RegisterScreen extends State<RegisterScreen>{
                                         showMyDialog(context, '오류가 발생하였습니다! 인터넷연결을 확인해주세요!');
                                       }
                                 }).then((value){
+                                  print(value);
                                   if(value == 'success'){
-                                    return AlertDialog(
-                                      content: SingleChildScrollView(
-                                        child: Text(
-                                            '성공적으로 등록되었습니다!'
-                                        ),
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('확인'),
-                                          onPressed: () {
-                                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
-                                                (BuildContext context) => LoginScreen()), (
-                                                Route<dynamic> route) => false);
-                                          },
-                                        ),
-                                      ],
+                                    return showDialog<void>(
+                                      context: context,
+                                      barrierDismissible: true, // user dont have button!
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          content: SingleChildScrollView(
+                                            child: Text(
+                                                '성공적으로 등록되었습니다!'
+                                            ),
+                                          ),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              child: Text('확인'),
+                                              onPressed: () {
+                                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
+                                                    (BuildContext context) => LoginScreen()), (
+                                                    Route<dynamic> route) => false);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
                                     );
+                                  }else if(value == 'already'){
+                                    return showMyDialog(context, '이미 등록된 이메일입니다!');
                                   }else{
-                                    return AlertDialog(
-                                      content: SingleChildScrollView(
-                                        child: Text(
-                                            '오류가 발생하였습니다! 다시한번 시도해주세요!'
-                                        ),
-                                      ),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          child: Text('확인'),
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                          },
-                                        ),
-                                      ],
-                                    );
+                                    return showMyDialog(context, '오류가 발생하였습니다! 다시한번 시도해주세요!');
                                   }
                                 });
                               }else{

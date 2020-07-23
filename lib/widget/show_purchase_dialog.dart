@@ -7,6 +7,8 @@ import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/screen/home_screen.dart';
 import 'package:toast/toast.dart';
 
+import 'my_draft_box_silder.dart';
+
 
 Future<void> showPurchaseDialog(BuildContext context, String message,String userID, String templateCode) async {
   return showDialog<void>(
@@ -95,9 +97,11 @@ Future<List<UserInfo>> refetchUserInfo(BuildContext context ,String userID) asyn
         UserInfo userInfoItem = UserInfo.fromJson(result[i]);
         res.add(userInfoItem);
       }
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
-          (BuildContext context) => HomeScreen(userInfoList: res,)), (
-          Route<dynamic> route) => false);
+      //BoxSlider(userInfoList: res);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder:
+          (BuildContext context) => BoxSlider(userInfoList: res,))
+          ,(Route<dynamic> route) => false);
       return res;
     }else{
       return Future.error('loginFail');

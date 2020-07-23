@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/putData/put_user_answer.dart';
+import 'package:selfbookflutter/screen/overview_screen.dart';
 import 'package:selfbookflutter/widget/show_dialog.dart';
 import 'package:toast/toast.dart';
 
@@ -32,6 +33,14 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
     }
     super.initState();
   }
+
+  @override
+  void dispose() {
+    super.dispose();
+    titleTextController.dispose();
+    authorTextController.dispose();
+    publishDateTextController.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,7 +49,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Expanded(
-              flex: 2,
+              flex: 3,
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
@@ -79,7 +88,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                 )
               ),
             Expanded(
-                flex: 2,
+                flex: 3,
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
@@ -99,7 +108,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                 )
             ),
             Expanded(
-                flex: 2,
+                flex: 3,
                 child: Padding(
                   padding: EdgeInsets.all(10),
                   child: TextField(
@@ -119,7 +128,33 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                 )
             ),
             Expanded(
-              flex: 7,
+              flex: 2,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(8, 5, 8, 0),
+                child: Container(
+                  width: double.infinity,
+                  child: FlatButton(
+                    shape: new RoundedRectangleBorder(
+                      borderRadius: new BorderRadius.circular(30.0),
+                    ),
+                    child: Text('원고 미리보기', style: TextStyle(fontSize: 15),),
+                    color: Color.fromRGBO(96, 128, 104, 100),
+                    textColor: Colors.white,
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute<Null>(
+                        //fullscreenDialog: true,
+                          builder: (BuildContext context) {
+                            return OverView(widget.userInfo);
+                          }
+                      ));
+                      //Navigator.of(context).push(MaterialPageRoute())
+                    },
+                  ),
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 11,
               child: Container(),
             )
                 //Container

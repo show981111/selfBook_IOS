@@ -4,6 +4,7 @@ import 'package:selfbookflutter/Api/Api.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/screen/home_screen.dart';
 import 'package:selfbookflutter/screen/register_screen.dart';
+import 'package:selfbookflutter/screen/reset_password_screen.dart';
 import 'dart:convert';
 
 import 'package:selfbookflutter/widget/show_dialog.dart';
@@ -147,8 +148,11 @@ class _LoginScreenState extends State<LoginScreen>{
                       color: Color.fromRGBO(96, 128, 104, 100),
                       textColor: Colors.white,
                       onPressed: () {
-
-
+                        Navigator.of(context).push(MaterialPageRoute<Null>(
+                            builder: (BuildContext context) {
+                              return ResetScreen();
+                            }
+                        ));
                       },
                     ),
                   )

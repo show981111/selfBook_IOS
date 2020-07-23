@@ -53,7 +53,9 @@ Widget setSlider(BuildContext context, List<UserInfo> userInfoList){
 
   if(userInfoList != null && userInfoList.isNotEmpty){
     if(userInfoList[0].userTemplateCode == null || userInfoList[0].userTemplateCode == "null" ){
-      return  Text('아직 구매한 원고가 없습니다!');
+      return Center(
+        child:Text('아직 구매한 원고가 없습니다!', style: TextStyle(color: Colors.deepOrange, fontWeight: FontWeight.bold),) ,
+      );
     }else{
       return Container(
             height: 120,
