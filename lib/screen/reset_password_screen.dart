@@ -56,6 +56,7 @@ class _ResetScreenState extends State<ResetScreen>{
             Padding(
               padding: EdgeInsets.fromLTRB(8, 5, 8, 8),
               child: TextField(
+                  enabled: _isValidUser == 0 ? true : false,
                   controller: idController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -93,6 +94,7 @@ class _ResetScreenState extends State<ResetScreen>{
               child: Padding(
                 padding: EdgeInsets.all(8),
                 child: TextField(
+                  enabled: _isVerified == 0 ? true : false,
                   controller: verificationController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -162,8 +164,20 @@ class _ResetScreenState extends State<ResetScreen>{
                         color: Color.fromRGBO(96, 128, 104, 100),
                         textColor: Colors.white,
                         onPressed: () {
+                          print(passwordCheckController.text);
+                          print(passwordController.text);
                           if(passwordCheckController.text == passwordController.text){
-
+                            resetPW(context, idController.text, passwordController.text).then((value) {
+                              if(value == 'success'){
+                                showMyDialog(context, '성공적으로 비밀번호를 재설정하였습니다!');
+                              }else{
+                                showMyDialog(context, '오류가 발생하였습니다!');
+                              }
+                            }).catchError((e) {
+                              showMyDialog(context, '오류가 발생하였습니다!');
+                            });
+                          }else{
+                            showMyDialog(context, '비밀번호 확인이 일치하지 않습니다!');
                           }
 
                         },
@@ -197,12 +211,13 @@ Future<String> sendAuth(BuildContext context ,String userID) async{
   }
 }
 
-Future<String> resetPW(BuildContext context ,String userID, String password) async{
+Future<String> resetPW(BuildContext context ,String userID, String userPassword) async{
 
   Map data = {
-    'userID' : userID
+    'userID' : userID,
+    'userPassword' : userPassword
   };
-  var response = await http.post(API.SEND_AUTH, body: data);
+  var response = await http.post(API.POST_RESETPW, body: data);
   if(response.statusCode == 200 && response.body.isNotEmpty){
     var result = response.body.toString();
     return result;

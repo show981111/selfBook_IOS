@@ -43,7 +43,7 @@ class _RegisterScreen extends State<RegisterScreen>{
         title: Text('회원가입'),
       ),
       body: Container(
-        child : Column(//_isLoading ? Center(child: CircularProgressIndicator()) :
+        child : Center ( child : SingleChildScrollView(child :Column(//_isLoading ? Center(child: CircularProgressIndicator()) :
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           //crossAxisAlignment: CrossAxisAlignment.center,
@@ -186,7 +186,7 @@ class _RegisterScreen extends State<RegisterScreen>{
             ),
           ],
         ),
-      ),
+      ),))
     );
   }
 

@@ -6,11 +6,12 @@ import 'package:selfbookflutter/screen/delegate_screen.dart';
 
 class ChapterGrid extends StatelessWidget{
   final UserInfo userInfo;
-  List<Chapter> chapterList;
+  //List<Chapter> chapterList;
   ChapterGrid(this.userInfo);
 
   @override
   Widget build(BuildContext context) {
+    List<Chapter> chapterList;
     return FutureBuilder(
       future: getChapterList(userInfo.userID, userInfo.userTemplateCode),
       builder: (BuildContext context, AsyncSnapshot snapshot) {

@@ -15,4 +15,5 @@ class API {
   static const String POST_SKIPDELEGATE = BASE_URL + "/skipDelegateAndDetail.php";
   static const String GET_IMAGEBASEURL = BASE_URL + "/images/";
   static const String POST_MAKEDOCX = BASE_URL + "/makeDocx.php";
+  static const String GET_DOWNLOADDOCX = BASE_URL + "/downloadDocx.php";
 }

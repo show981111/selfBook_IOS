@@ -4,7 +4,7 @@ import 'package:selfbookflutter/widget/basic_draft_info.dart';
 import 'package:selfbookflutter/widget/chapter_grid.dart';
 
 class MyDraftScreen extends StatefulWidget {
-  UserInfo userInfo;
+  final UserInfo userInfo;
 
   MyDraftScreen(this.userInfo);
   _MyDraftScreen createState() => _MyDraftScreen();

@@ -39,8 +39,10 @@ class _LoginScreenState extends State<LoginScreen>{
       appBar: AppBar(
         title: Text('로그인'),
       ),
-      body: Container(
-        child : Column(//_isLoading ? Center(child: CircularProgressIndicator()) :
+        resizeToAvoidBottomInset: false,
+        body: Container(
+        child : Center ( child : SingleChildScrollView(
+          child : Column(//_isLoading ? Center(child: CircularProgressIndicator()) :
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           //crossAxisAlignment: CrossAxisAlignment.center,
@@ -58,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen>{
 //              ),
 //            ),
             Padding(
-              padding: EdgeInsets.fromLTRB(8, 30, 8, 8),
+              padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
               child: TextField(
                   controller: idController,
                   decoration: InputDecoration(
@@ -163,6 +165,8 @@ class _LoginScreenState extends State<LoginScreen>{
           ],
         ),
       ),
+      )
+        )
     );
   }
 
