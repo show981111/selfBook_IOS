@@ -203,7 +203,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                 ),
               ),
               Expanded(
-                flex: 16,
+                flex: 14,
                 child: Container(),
               )
                   //Container
