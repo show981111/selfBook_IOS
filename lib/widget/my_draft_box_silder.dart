@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:selfbookflutter/Api/Api.dart';
-import 'package:selfbookflutter/handler/lifecycle_handler.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/screen/login_screen.dart';
 import 'package:selfbookflutter/screen/my_draft_screen.dart';

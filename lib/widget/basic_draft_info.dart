@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:selfbookflutter/Api/Api.dart';
+import 'package:selfbookflutter/fetchData/get_token.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/putData/put_user_answer.dart';
 import 'package:selfbookflutter/screen/overview_screen.dart';
@@ -27,6 +28,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
   Dio dio = Dio();
   bool _isLoading ;
   String _downloadPercent;
+  String _token;
 
   @override
   void initState() {
@@ -43,6 +45,9 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
         publishDateTextController.text = widget.userInfo.userBookPublishDate;
       }
     }
+    jwtOrEmpty.then((value){
+      _token = value;
+    });
     dio.interceptors.add(LogInterceptor());
     super.initState();
   }
@@ -75,20 +80,21 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                         suffixIcon: IconButton(icon: Icon(Icons.send),
                           onPressed: () {
                             putUserAnswer(context ,widget.userInfo.userTemplateCode, widget.userInfo.userID,
-                                titleTextController.text , 'setBookTitle').catchError((e) {
+                                titleTextController.text , 'setBookTitle', _token).catchError((e) {
                               print("Got error: ${e}");
                               if(e == 'upload fail'){
                                 showMyDialog(context, '오류가 발생하였습니다!');
-                              }else{
+                              }else if(e == 'Auth fail'){
+                                showMyDialog(context, '오류가 발생했습니다! 다시 로그인해주세요!');
+                              }else {
                                 showMyDialog(context, '인터넷 연결을 확인해주세요!');
                               }
                             })
                             .then((value) {
                               if(value == 'success'){
                                 Toast.show('성공적으로 업로드하습니다!', context,duration: Toast.LENGTH_LONG, gravity:  Toast.CENTER);
-                              }else{
+                              }else if(value == 'fail'){
                                 Toast.show('이미 설정된 제목입니다.', context,duration: Toast.LENGTH_SHORT, gravity:  Toast.CENTER);
-
                               }
                             });
                           },
@@ -156,7 +162,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                       color: Color.fromRGBO(96, 128, 104, 100),
                       textColor: Colors.white,
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute<Null>(
+                        return Navigator.of(context).push(MaterialPageRoute<Null>(
                           //fullscreenDialog: true,
                             builder: (BuildContext context) {
                               return OverView(widget.userInfo);
@@ -192,7 +198,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                             print(documents);
                             String docName = widget.userInfo.userName + '_' +widget.userInfo.userTemplateCode;
                             download2(dio,API.GET_DOWNLOADDOCX, documents.path+'/$docName.docx',
-                                widget.userInfo.userID, widget.userInfo.userTemplateCode, context);
+                                widget.userInfo.userID, widget.userInfo.userTemplateCode, context, _token);
 
                           }
                         });
@@ -235,16 +241,20 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
     );
   }
 
-  Future download2(Dio dio, String url, String savePath, String userID, String templateCode, BuildContext context) async {
+  Future download2(Dio dio, String url, String savePath, String userID, String templateCode, BuildContext context, String token) async {
     try {
-      var info = {
+      print("token dio " +token);
+      print(userID + templateCode);
+      int statusCode;
+
+      var queryParameters = {
         'userID' : userID,
         'templateCode' : templateCode
       };
-      print(userID + templateCode);
-      int statusCode;
-      Response response = await dio.post(
+
+      Response response = await dio.get(
         url,
+        queryParameters: queryParameters,
         onReceiveProgress:(received, total) {
           if (total != -1) {
             if(statusCode == 200) {
@@ -257,8 +267,12 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
           }
         },
         //Received data with List<int>
-        data : FormData.fromMap(info),
+        //data : FormData.fromMap(info),
         options: Options(
+            headers: {
+              'Authorization': 'Bearer ' + token,
+              'Content-Type': 'application/json',
+            },
             responseType: ResponseType.bytes,
             followRedirects: false,
             validateStatus: (status) {
@@ -266,6 +280,8 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
               return status < 500;
             }),
       );
+
+
       print(response.headers);
       //if(response.data.toString())
       if(statusCode == 200) {
@@ -277,6 +293,11 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
         await raf.close().then((value){
 
         });
+      }else if(statusCode == 401){
+        setState(() {
+          _isLoading = false;
+        });
+        showMyDialog(context, '오류가 발생했습니다! 다시 로그인해주세요!');
       }else{
         setState(() {
           _isLoading = false;

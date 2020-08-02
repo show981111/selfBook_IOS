@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:selfbookflutter/Api/Api.dart';
@@ -6,8 +8,11 @@ import 'package:selfbookflutter/screen/home_screen.dart';
 import 'package:selfbookflutter/screen/register_screen.dart';
 import 'package:selfbookflutter/screen/reset_password_screen.dart';
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'package:selfbookflutter/widget/show_dialog.dart';
+
+final storage = FlutterSecureStorage();
 
 class LoginScreen extends StatefulWidget {
   _LoginScreenState createState() => _LoginScreenState();
@@ -103,6 +108,21 @@ class _LoginScreenState extends State<LoginScreen>{
                           }else{
                             showMyDialog(context, '인터넷 연결을 확인해주세요!');
                           }
+                        }).then((value) {
+                          if(value != null && value.isNotEmpty)
+                          {
+                            storage.write(key: "jwt", value: value);
+
+                            getUserInfo(context , idController.text, value).catchError((e){
+                              print("error : " + e.toString() );
+                              if(e == 'Access Denied'){
+                                showMyDialog(context, '다시 로그인 해주세요!');
+                              }else{
+                                print("error here");
+                                showMyDialog(context, '오류가 발생하였습니다!');
+                              }
+                            });
+                          }
                         });
                         //print(e);
                       },
@@ -172,37 +192,61 @@ class _LoginScreenState extends State<LoginScreen>{
 
 }
 
-Future<List<UserInfo>> login(BuildContext context ,String userID, String password) async{
-
-  List<UserInfo> res = new List<UserInfo>();
+Future<String> login(BuildContext context ,String userID, String password) async{
 
   Map data = {
     'userID' : userID,
     'userPassword' : password
   };
-  var response = await http.post(API.GET_USERINFO, body: data);
-  print(userID + password);
+  var response = await http.post(API.POST_LOGIN, body: data);
+  print(response.statusCode);
+  print(response.body);
   if(response.statusCode == 200 && response.body.isNotEmpty){
-    print(response.body);
+    return response.body;
+  }else if(response.statusCode == 401){
+    return Future.error('loginFail');
+  }else {
+    return Future.error('loading is fail');
+  }
+}
+
+Future<List<UserInfo>> getUserInfo(BuildContext context ,String userID, String token) async{
+
+  List<UserInfo> res = new List<UserInfo>();
+
+  var queryParameters = {
+    'userID': userID,
+  };
+
+  var uri = Uri.http('13.125.245.251', "/purchases" ,queryParameters);
+  print(uri);
+
+  var response = await http.get(uri, headers: {
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json',
+  });
+
+  print("response " + response.body);
+  if(response.statusCode == 200 && response.body.isNotEmpty){
 
     var result = json.decode(response.body);
     print('encoded res' + result.toString());
-    if(result.length > 0) {
-      for(int i = 0; i < result.length; i++){
-        UserInfo userInfoItem = UserInfo.fromJson(result[i]);
-        res.add(userInfoItem);
-      }
-      //res.addAll(result);
-//      controller.animateTo(1);
-      print('Login change page' + res.toString());
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
-          (BuildContext context) => HomeScreen(userInfoList: res,)), (
-          Route<dynamic> route) => false);
-      return res;
-    }else{
-      return Future.error('loginFail');
+
+    for(int i = 0; i < result.length; i++){
+      UserInfo userInfoItem = UserInfo.fromJson(result[i]);
+      res.add(userInfoItem);
     }
+
+    print('Login change page' + res.toString());
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
+        (BuildContext context) => HomeScreen(userInfoList: res,)), (
+        Route<dynamic> route) => false);
+    return res;
+
+  }else if(response.statusCode == 401){
+    return Future.error('Access Denied');
   }else{
     return Future.error('loading fail');
   }
 }
+

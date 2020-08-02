@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:selfbookflutter/fetchData/fetch_chapter_list.dart';
+import 'package:selfbookflutter/fetchData/get_token.dart';
 import 'package:selfbookflutter/model/chapter.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/screen/delegate_screen.dart';
 
 class ChapterGrid extends StatelessWidget{
   final UserInfo userInfo;
-  //List<Chapter> chapterList;
+
   ChapterGrid(this.userInfo);
 
   @override
@@ -15,11 +16,12 @@ class ChapterGrid extends StatelessWidget{
     return FutureBuilder(
       future: getChapterList(userInfo.userID, userInfo.userTemplateCode),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
-        if(snapshot.hasData == false){
+        if(snapshot.hasData == false && !snapshot.hasError){
           return Center(
             child: CircularProgressIndicator(),
           );
         }else if(snapshot.hasError){
+          print(snapshot.error);
           return Container(
             child: Text('error'),
           );
@@ -36,7 +38,9 @@ class ChapterGrid extends StatelessWidget{
 
 }
 
+
 List<Widget> chapterGrid(BuildContext context, List<Chapter> chapterList, UserInfo userInfo){
+
   List<Widget> results = [];
   for(int i = 0; i < chapterList.length; i ++){
     results.add(

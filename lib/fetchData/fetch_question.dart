@@ -7,19 +7,33 @@ import 'package:selfbookflutter/model/question.dart';
 import 'package:selfbookflutter/model/template.dart';
 import 'package:http/http.dart' as http;
 
+import 'package:selfbookflutter/fetchData/get_token.dart';
 
-Future<List<Question>> getQuestionList(Map data, String type) async{
+
+Future<List<Question>> getQuestionList(var data, String type) async{
+
+  final String token = await jwtOrEmpty;
 
   List<Question> questionList = List<Question>();
 
-  String url = '';
+  String path = '';
   if(type == 'delegate'){
-    url = API.GET_DELEGATELIST;
+    path = "/delegates";
   }else{
-    url = API.GET_DETAILLIST;
+    path = "/details";
   }
 
-  var response = await http.post(url, body: data);
+  //var response = await http.post(url, body: data);
+  print(path);
+  print(data);
+  var uri = Uri.http(API.IP, path,data);
+  print(uri);
+  print(token);
+  var response = await http.get(uri, headers: {
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json',
+  });
+
   if(response.statusCode == 200 && response.body.isNotEmpty){
     var result = json.decode(response.body);
     for(int i = 0; i < result.length ; i++)

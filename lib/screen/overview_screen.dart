@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:selfbookflutter/Api/Api.dart';
+import 'package:selfbookflutter/fetchData/get_token.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:http/http.dart' as http;
 import 'package:selfbookflutter/widget/show_dialog.dart';
@@ -17,17 +18,18 @@ class OverView extends StatelessWidget{
       appBar: AppBar(
         title: Text('원고 미리보기'),
       ),
-      body : FutureBuilder(
+      body :
+          FutureBuilder(
           future: getOverView(userInfo.userID, userInfo.userTemplateCode),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if(snapshot.hasData == false){
+            if(snapshot.hasData == false && !snapshot.hasError){
               return Center(
                 child: CircularProgressIndicator(),
               );
             }else if(snapshot.hasError){
               return Container(
                 child: Center(
-                  child: Text('오류가 발생하였습니다!'),
+                  child: Text('오류가 발생하였습니다! 다시 로그인해주세요!'),
                 )
               );
             }else{
@@ -85,6 +87,7 @@ class OverView extends StatelessWidget{
                             showMyDialog(context, '원고를 생성하기 위해서는 모든 질문에 답변을 해주세요! \nQ : $value');
                           }
                         }).catchError((e) {
+                          print(e.toString());
                           showMyDialog(context, '오류가 발생하였습니다! 인터넷 연결을 확인 후 다시한번 시도해주세요!');
                         });
                       },
@@ -107,20 +110,33 @@ class OverView extends StatelessWidget{
 Future<String> getOverView(String userID, String templateCode) async {
 //  $userID = $_POST['userID'];
 //  $templateCode = $_POST['templateCode'];
-  Map data = {
+
+  final String token = await jwtOrEmpty;
+
+  var queryParameters = {
     'userID' : userID,
     'templateCode' : templateCode,
   };
-  var response = await http.post(API.GET_OVERVIEW, body: data);
-  if(response.statusCode == 200 && response.body.isNotEmpty){
+
+  var uri = Uri.http(API.IP, "/overview" ,queryParameters);
+  print(uri);
+
+  var response = await http.get(uri, headers: {
+    'Authorization': 'Bearer ' + token,
+    'Content-Type': 'application/json',
+  });
+  print(response.statusCode);
+  if (response.statusCode == 200 && response.body.isNotEmpty) {
     var result = response.body;
     print(result);
-    if(result != null ){
+    if (result != null) {
       return result;
-    }else{
+    } else {
       return Future.error('parse fail');
     }
-  }else{
+  } else if (response.statusCode == 401) {
+    return Future.error('Auth fail');
+  } else {
     return Future.error('connection fail');
   }
 }
@@ -128,11 +144,16 @@ Future<String> getOverView(String userID, String templateCode) async {
 Future<String> makeDocx(String userID, String templateCode) async {
 //  $userID = $_POST['userID'];
 //  $templateCode = $_POST['templateCode'];
+  final String token = await jwtOrEmpty;
+  print(token);
   Map data = {
     'userID' : userID,
     'templateCode' : templateCode,
   };
-  var response = await http.post(API.POST_MAKEDOCX, body: data);
+
+  var response = await http.put(API.PUT_MAKEDOCX, body: data, headers: {
+    'Authorization': 'Bearer ' + token
+  });
   if(response.statusCode == 200 && response.body.isNotEmpty){
     var result = response.body;
     print(result);

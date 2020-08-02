@@ -16,7 +16,7 @@ class DelegateListScreen extends StatefulWidget {
 }
 
 class _DelegateListScreen extends State<DelegateListScreen>{
-  Map _data;
+  var _data;
   List<Question> delegateList;
   final SlidableController slidableController = SlidableController();
   @override
@@ -36,11 +36,12 @@ class _DelegateListScreen extends State<DelegateListScreen>{
         body: FutureBuilder(
           future: getQuestionList(_data, 'delegate'),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if(snapshot.hasData == false){
+            if(snapshot.hasData == false && !snapshot.hasError){
               return Center(
                 child:CircularProgressIndicator()
               );
             }else if(snapshot.hasError) {
+              print(snapshot.error);
               return Center(
                   child: Text("에러가 발생하였습니다!")
               );

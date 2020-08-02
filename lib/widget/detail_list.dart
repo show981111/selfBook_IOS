@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:selfbookflutter/fetchData/fetch_question.dart';
+import 'package:selfbookflutter/fetchData/get_token.dart';
 import 'package:selfbookflutter/model/question.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/putData/put_user_answer.dart';
@@ -21,6 +22,7 @@ class _DetailList extends State<DetailList>{
   int tappedIndex;
   List<TextEditingController> _answerTextControllerList = new List<TextEditingController>();
   List<String> _status = new List<String>();
+  String _token;
   @override
   void dispose() {
     for(int i = 0; i < _answerTextControllerList.length; i++)
@@ -28,6 +30,14 @@ class _DetailList extends State<DetailList>{
       _answerTextControllerList[i].dispose();
     }
     super.dispose();
+  }
+
+  @override
+  void initState() {
+    jwtOrEmpty.then((value){
+      _token = value;
+    });
+    super.initState();
   }
   @override
   Widget build(BuildContext context) {
@@ -48,7 +58,7 @@ class _DetailList extends State<DetailList>{
             closeOnTap: true,
             onTap: () {
               putUserAnswer(context ,widget.detailList[index].id,widget.userInfo.userID,
-                  'skipped', 'answer').catchError((e) {
+                  'skipped', 'answer', _token).catchError((e) {
                 if(e == 'upload fail'){
                   showMyDialog(context, '오류가 발생하였습니다. 다시한번 시도해주세요!');
                 }else{
@@ -100,7 +110,7 @@ class _DetailList extends State<DetailList>{
                               }
                               print(_answerTextControllerList[index].text);
                               putUserAnswer(context ,widget.detailList[index].id,widget.userInfo.userID,
-                                  _answerTextControllerList[index].text, 'answer').catchError((e) {
+                                  _answerTextControllerList[index].text, 'answer', _token).catchError((e) {
                                   if(e == 'upload fail'){
                                     showMyDialog(context, '오류가 발생하였습니다. 다시한번 시도해주세요!');
                                   }else{

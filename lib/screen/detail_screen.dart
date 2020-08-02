@@ -16,7 +16,7 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreen extends State<DetailScreen>{
-  Map _data;
+  var _data;
   List<Question> detailList;
   @override
   void initState() {
@@ -36,11 +36,12 @@ class _DetailScreen extends State<DetailScreen>{
         body: FutureBuilder(
           future: getQuestionList(_data, 'detail'),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if(snapshot.hasData == false){
+            if(snapshot.hasData == false && !snapshot.hasError){
               return Center(
                 child:CircularProgressIndicator()
               );
             }else if(snapshot.hasError) {
+              print(snapshot.error);
               return Center(
                   child: Text("에러가 발생하였습니다!")
               );

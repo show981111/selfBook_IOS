@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:selfbookflutter/fetchData/get_token.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/widget/basic_draft_info.dart';
 import 'package:selfbookflutter/widget/chapter_grid.dart';
@@ -11,6 +12,19 @@ class MyDraftScreen extends StatefulWidget {
 }
 
 class _MyDraftScreen extends State<MyDraftScreen>{
+
+  String _token;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    jwtOrEmpty.then((value){
+      _token = value;
+      print("draft screen : $_token");
+    });
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
