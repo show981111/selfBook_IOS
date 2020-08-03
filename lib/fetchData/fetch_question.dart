@@ -24,8 +24,7 @@ Future<List<Question>> getQuestionList(var data, String type) async{
   }
 
   //var response = await http.post(url, body: data);
-  print(path);
-  print(data);
+
   var uri = Uri.http(API.IP, path,data);
   print(uri);
   print(token);

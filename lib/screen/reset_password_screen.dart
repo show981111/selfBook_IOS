@@ -7,6 +7,9 @@ import 'package:selfbookflutter/screen/register_screen.dart';
 import 'dart:convert';
 
 import 'package:selfbookflutter/widget/show_dialog.dart';
+import 'package:toast/toast.dart';
+
+import 'login_screen.dart';
 
 class ResetScreen extends StatefulWidget {
   _ResetScreenState createState() => _ResetScreenState();
@@ -81,6 +84,7 @@ class _ResetScreenState extends State<ResetScreen>{
                               showMyDialog(context, '오류가 발생하였습니다! 다시한번 시도해주세요!!');
                             }
                           }).catchError((e) {
+                            print(e);
                             showMyDialog(context, '오류가 발생하였습니다! 다시한번 시도해주세요!!!!!');
                           });
 
@@ -169,7 +173,10 @@ class _ResetScreenState extends State<ResetScreen>{
                           if(passwordCheckController.text == passwordController.text){
                             resetPW(context, idController.text, passwordController.text).then((value) {
                               if(value == 'success'){
-                                showMyDialog(context, '성공적으로 비밀번호를 재설정하였습니다!');
+                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
+                                    (BuildContext context) => LoginScreen()), (
+                                    Route<dynamic> route) => false);
+                                Toast.show('성공적으로 비밀번호를 변경하였습니다!', context, duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
                               }else{
                                 showMyDialog(context, '오류가 발생하였습니다!');
                               }
@@ -202,11 +209,11 @@ Future<String> sendAuth(BuildContext context ,String userID) async{
     'userID' : userID
   };
   var response = await http.post(API.SEND_AUTH, body: data);
+  print(response.body);
   if(response.statusCode == 200 && response.body.isNotEmpty){
     var result = response.body.toString();
     return result;
   }else{
-    print('error');
     return Future.error('loading fail');
   }
 }
@@ -217,7 +224,7 @@ Future<String> resetPW(BuildContext context ,String userID, String userPassword)
     'userID' : userID,
     'userPassword' : userPassword
   };
-  var response = await http.post(API.POST_RESETPW, body: data);
+  var response = await http.put(API.POST_RESETPW, body: data);
   if(response.statusCode == 200 && response.body.isNotEmpty){
     var result = response.body.toString();
     return result;

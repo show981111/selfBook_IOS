@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:selfbookflutter/Api/Api.dart';
+import 'package:selfbookflutter/fetchData/get_token.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/screen/home_screen.dart';
 import 'package:selfbookflutter/screen/register_screen.dart';
@@ -113,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen>{
                           {
                             storage.write(key: "jwt", value: value);
 
-                            getUserInfo(context , idController.text, value).catchError((e){
+                            getUserInfo(context , idController.text).catchError((e){
                               print("error : " + e.toString() );
                               if(e == 'Access Denied'){
                                 showMyDialog(context, '다시 로그인 해주세요!');
@@ -210,15 +211,15 @@ Future<String> login(BuildContext context ,String userID, String password) async
   }
 }
 
-Future<List<UserInfo>> getUserInfo(BuildContext context ,String userID, String token) async{
-
+Future<List<UserInfo>> getUserInfo(BuildContext context ,String userID) async{
+  String token = await jwtOrEmpty;
   List<UserInfo> res = new List<UserInfo>();
 
   var queryParameters = {
     'userID': userID,
   };
 
-  var uri = Uri.http('13.125.245.251', "/purchases" ,queryParameters);
+  var uri = Uri.http(API.IP, "/purchases" ,queryParameters);
   print(uri);
 
   var response = await http.get(uri, headers: {

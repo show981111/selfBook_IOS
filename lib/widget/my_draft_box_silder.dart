@@ -6,14 +6,22 @@ import 'package:selfbookflutter/screen/login_screen.dart';
 import 'package:selfbookflutter/screen/my_draft_screen.dart';
 
 class BoxSlider extends StatefulWidget {
-  final List<UserInfo> userInfoList;
+  static _BoxSlider of(BuildContext context) => context.findAncestorStateOfType<_BoxSlider>();
+
+  List<UserInfo> userInfoList;
   BoxSlider({this.userInfoList});
   _BoxSlider createState() => _BoxSlider();
+
 
 }
 
 class _BoxSlider extends State<BoxSlider>{
 
+  void setUserInfoList(List<UserInfo> userInfoList){
+    setState(() {
+      widget.userInfoList = userInfoList;
+    });
+  }
   @override
   void initState() {
     super.initState();

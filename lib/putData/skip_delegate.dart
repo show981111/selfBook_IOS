@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:selfbookflutter/Api/Api.dart';
+import 'package:selfbookflutter/fetchData/get_token.dart';
 import 'package:selfbookflutter/model/template.dart';
 import 'package:http/http.dart' as http;
 
 Future<String> skipDelegate(BuildContext context ,String key, String userID) async{
 
+  String token = await jwtOrEmpty;
+
   Map data = {
     'userID' : userID,
     'delegateCode' : key
   };
-  var response = await http.post(API.POST_SKIPDELEGATE, body: data);
+
+  var response = await http.put(API.PUT_SKIPDELEGATE, body: data, headers: {
+    'Authorization': 'Bearer ' + token
+  });
   if(response.statusCode == 200 && response.body.isNotEmpty){
     print(response.body);
 
@@ -21,6 +27,8 @@ Future<String> skipDelegate(BuildContext context ,String key, String userID) asy
     }else{
       return Future.error('upload fail');
     }
+  }else if(response.statusCode == 401){
+    return Future.error('Auth fail');
   }else{
     return Future.error('connection fail');
   }

@@ -74,19 +74,21 @@ class _QuestionList extends State<QuestionList>{
             closeOnTap: true,
             onTap: () {
               skipDelegate(context ,widget.questionList[index].id,widget.userInfo.userID)
-                  .catchError((e) {
-                if(e == 'upload fail'){
-                  showMyDialog(context, '오류가 발생하였습니다. 다시한번 시도해주세요!');
-                }else{
-                  showMyDialog(context, '인터넷 연결을 확인해주세요!');
-                }
-              }).then((value) {
+                  .then((value) {
                 if(value == 'success'){
                   Toast.show('성공적으로 업로드하였습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
                   setState(() {
                     _answerTextControllerList[index].text = "skipped";
                     _status[index] = "1";
                   });
+                }
+              }).catchError((e) {
+                if(e == 'upload fail'){
+                  showMyDialog(context, '오류가 발생하였습니다. 다시한번 시도해주세요!');
+                }else if(e == 'Auth fail'){
+                  showMyDialog(context, '인증이 만료되었습니다. 다시 로그인해주세요!');
+                }else{
+                  showMyDialog(context, '인터넷 연결을 확인해주세요!');
                 }
               });
             },

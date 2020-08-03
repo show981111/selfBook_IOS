@@ -13,16 +13,10 @@ class MyDraftScreen extends StatefulWidget {
 
 class _MyDraftScreen extends State<MyDraftScreen>{
 
-  String _token;
 
   @override
   void initState() {
     // TODO: implement initState
-    jwtOrEmpty.then((value){
-      _token = value;
-      print("draft screen : $_token");
-    });
-
     super.initState();
   }
   @override
