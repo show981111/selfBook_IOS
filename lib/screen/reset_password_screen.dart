@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:selfbookflutter/Api/Api.dart';
-import 'package:selfbookflutter/model/userInfo.dart';
-import 'package:selfbookflutter/screen/home_screen.dart';
-import 'package:selfbookflutter/screen/register_screen.dart';
-import 'dart:convert';
 
 import 'package:selfbookflutter/widget/show_dialog.dart';
 import 'package:toast/toast.dart';
@@ -24,8 +20,6 @@ class _ResetScreenState extends State<ResetScreen>{
 
   int _isValidUser = 0;
   int _isVerified = 0;
-
-  String _verificationCode;
 
   @override
   void dispose() {
@@ -71,21 +65,19 @@ class _ResetScreenState extends State<ResetScreen>{
                           sendAuth(context, idController.text).then((value) {
                             String response = value;
                             print(response + " vas");
-                            if(response != null && response.length > 7 && response.substring(0,7) =='success'){
-                              showMyDialog(context, '인증번호를 보냈습니다! 메일이 보이지 않는다면 스팸메일함을 확인해주세요!');
+                            if(response =='success'){
+                              showMyDialog(context, '인증번호를 보냈습니다! 메일이 보이지 않는다면 스팸메일함을 확인해주세요! \n인증번호의 유효기간은 3분입니다!');
                               setState(() {
                                 _isValidUser = 1;
-                                _verificationCode = response.substring(7);
                               });
                             }else if(response == 'none'){
                               showMyDialog(context, '등록되지 않은 유저입니다!');
                             }else{
-                              print(response + "vasdsa");
                               showMyDialog(context, '오류가 발생하였습니다! 다시한번 시도해주세요!!');
                             }
                           }).catchError((e) {
                             print(e);
-                            showMyDialog(context, '오류가 발생하였습니다! 다시한번 시도해주세요!!!!!');
+                            showMyDialog(context, '오류가 발생하였습니다! 다시한번 시도해주세요!');
                           });
 
                         },
@@ -105,16 +97,20 @@ class _ResetScreenState extends State<ResetScreen>{
                       labelText: '인증번호 확인',
                       suffixIcon: IconButton(icon: Icon(Icons.send),
                         onPressed: () {
-                          String message = '';
-                          if(verificationController.text == _verificationCode){
-                            message = '인증이 완료되었습니다!';
-                            setState(() {
-                              _isVerified = 1;
-                            });
-                          }else{
-                            message = '인증번호가 일치하지 않습니다.';
-                          }
-                          showMyDialog(context, message);
+                          checkVerificationCode(context, idController.text, verificationController.text).then((value) {
+                            print(value);
+                            if(value == 'success'){
+                              showMyDialog(context, '성공적으로 인증하였습니다!');
+                              setState(() {
+                                _isVerified = 1;
+                              });
+                            }else if(value == 'late'){
+                              showMyDialog(context, '인증 유효기간을 초과하였습니다!(3분)');
+                            }else{
+                              showMyDialog(context, '인증번호가 일치하지 않습니다!');
+                            }
+                          }).catchError((e){showMyDialog(context, '오류가 발생하였습니다! 다시 시도해주세요!');;});
+
 
                         },
                       )
@@ -233,3 +229,20 @@ Future<String> resetPW(BuildContext context ,String userID, String userPassword)
     return Future.error('loading fail');
   }
 }
+
+Future<String> checkVerificationCode(BuildContext context ,String userID, String code) async{
+
+  Map data = {
+    'userID' : userID,
+    'verificationCode' : code
+  };
+  var response = await http.post(API.CHECKVERIFICATIONCODE, body: data);
+  if(response.statusCode == 200 && response.body.isNotEmpty){
+    var result = response.body.toString();
+    return result;
+  }else{
+    print('error');
+    return Future.error('loading fail');
+  }
+}
+

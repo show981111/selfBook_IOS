@@ -6,7 +6,6 @@ import 'package:selfbookflutter/screen/login_screen.dart';
 import 'package:selfbookflutter/screen/my_draft_screen.dart';
 
 class BoxSlider extends StatefulWidget {
-  static _BoxSlider of(BuildContext context) => context.findAncestorStateOfType<_BoxSlider>();
 
   List<UserInfo> userInfoList;
   BoxSlider({this.userInfoList});
@@ -24,6 +23,7 @@ class _BoxSlider extends State<BoxSlider>{
   }
   @override
   void initState() {
+    print("BOX called");
     super.initState();
   }
   @override
@@ -95,7 +95,7 @@ List<Widget> makeBoxImages(BuildContext context, List<UserInfo> userInfoList){
   List<Widget> results = [];
   for(int i = 0; i < userInfoList.length; i++)
   {
-    print('BOX' + userInfoList.toString() + userInfoList[0].userBookCover);
+
     results.add(
         InkWell(
           onTap: () {

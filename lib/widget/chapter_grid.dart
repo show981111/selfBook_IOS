@@ -23,7 +23,7 @@ class ChapterGrid extends StatelessWidget{
         }else if(snapshot.hasError){
           print(snapshot.error);
           return Container(
-            child: Text('error'),
+            child: Center(child: Text('인증서에 문제가 발견되었습니다! 다시 로그인해주세요!'),),
           );
         }else{
           chapterList = snapshot.data;

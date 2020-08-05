@@ -1,10 +1,13 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:selfbookflutter/Api/Api.dart';
 import 'package:selfbookflutter/fetchData/get_token.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
+import 'package:selfbookflutter/screen/login_screen.dart';
 import 'package:selfbookflutter/widget/carousel_slider.dart';
 import 'package:selfbookflutter/widget/my_draft_box_silder.dart';
+
 
 class HomeScreen extends StatefulWidget{
   List<UserInfo> userInfoList = new List<UserInfo>();
@@ -18,17 +21,27 @@ class _HomeScreenState extends State<HomeScreen>{
   @override
   void initState() {
     super.initState();
+    print("init called");
     jwtOrEmpty.then((value) {
       final parts = value.split('.');
       if (parts.length != 3) {
         throw Exception('invalid token');
       }
-
+      print(value);
       final String res = _decodeBase64(parts[1]);
+      final payloadMap = json.decode(res);
+      //print("USER " + payloadMap['userID']);
+//      String userID = res[]
+      getUserInfo(context , payloadMap['data']['userID'].toString()).then((value){
+        if(value != null && value.isNotEmpty){
 
-      print("RES "+res);
+            widget.userInfoList = value;
+
+        }
+      });
+      print(res);
+//      print("RES "+payloadMap['data']['userID'].toString());
     });
-    print('home userinfo' + widget.userInfoList.toString());
   }
 
   @override
@@ -47,6 +60,19 @@ class _HomeScreenState extends State<HomeScreen>{
 
     )
     );
+  }
+
+
+
+  @override
+  void didUpdateWidget(HomeScreen oldWidget) {//update child widget
+    // TODO: implement didUpdateWidget
+    print("called");
+    print(oldWidget.userInfoList.toString());
+    setState(() {
+      widget.userInfoList = oldWidget.userInfoList;
+    });
+    super.didUpdateWidget(oldWidget);
   }
 }
 
@@ -70,6 +96,16 @@ String _decodeBase64(String str) {
   return utf8.decode(base64Url.decode(output));
 }
 
-bool checkValidity(String token){
-  
+Future<bool> checkValidity(String token) async{
+
+  var response = await http.post(API.CHECKTOKEN, headers: {
+    'Authorization': 'Bearer ' + token
+  });
+  print(response.statusCode);
+  print(response.body);
+  if(response.statusCode == 200 && response.body.isNotEmpty){
+    return true;
+  }else {
+    return false;
+  }
 }

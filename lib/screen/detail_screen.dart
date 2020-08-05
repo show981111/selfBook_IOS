@@ -43,7 +43,7 @@ class _DetailScreen extends State<DetailScreen>{
             }else if(snapshot.hasError) {
               print(snapshot.error);
               return Center(
-                  child: Text("에러가 발생하였습니다!")
+                  child: Text('인증서에 문제가 발견되었습니다! 다시 로그인해주세요!')
               );
             }else{
               detailList = snapshot.data;

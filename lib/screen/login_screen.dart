@@ -114,7 +114,13 @@ class _LoginScreenState extends State<LoginScreen>{
                           {
                             storage.write(key: "jwt", value: value);
 
-                            getUserInfo(context , idController.text).catchError((e){
+                            getUserInfo(context , idController.text).then((value){
+                              if(value != null && value.isNotEmpty){
+                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
+                                    (BuildContext context) => HomeScreen(userInfoList: value,)), (
+                                    Route<dynamic> route) => false);
+                              }
+                            }).catchError((e){
                               print("error : " + e.toString() );
                               if(e == 'Access Denied'){
                                 showMyDialog(context, '다시 로그인 해주세요!');
@@ -226,22 +232,16 @@ Future<List<UserInfo>> getUserInfo(BuildContext context ,String userID) async{
     'Authorization': 'Bearer ' + token,
     'Content-Type': 'application/json',
   });
+  print(response.statusCode.toString() + ' ' + response.body.toString());
 
-  print("response " + response.body);
   if(response.statusCode == 200 && response.body.isNotEmpty){
 
     var result = json.decode(response.body);
-    print('encoded res' + result.toString());
 
     for(int i = 0; i < result.length; i++){
       UserInfo userInfoItem = UserInfo.fromJson(result[i]);
       res.add(userInfoItem);
     }
-
-    print('Login change page' + res.toString());
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
-        (BuildContext context) => HomeScreen(userInfoList: res,)), (
-        Route<dynamic> route) => false);
     return res;
 
   }else if(response.statusCode == 401){
