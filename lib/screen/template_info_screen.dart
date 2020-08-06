@@ -71,7 +71,7 @@ class _TemplateInfoScreen extends State<TemplateInfoScreen> {
                                         return;
                                       }
                                       showPurchaseDialog(context,widget.templateInfo.templateName+'를 구매하시겠습니까?\n가격 ' + widget.templateInfo.bookPrice + '원'
-                                          ,widget.userInfo.userID ,widget.templateInfo.templateCode);
+                                          ,widget.templateInfo.templateCode);
                                     },
                                     color: Colors.white70,
                                     child: Row(

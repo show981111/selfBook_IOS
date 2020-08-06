@@ -73,7 +73,7 @@ class _QuestionList extends State<QuestionList>{
             icon: Icons.arrow_right,
             closeOnTap: true,
             onTap: () {
-              skipDelegate(context ,widget.questionList[index].id,widget.userInfo.userID)
+              skipDelegate(context ,widget.questionList[index].id)
                   .then((value) {
                 if(value == 'success'){
                   Toast.show('성공적으로 업로드하였습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
@@ -127,7 +127,7 @@ class _QuestionList extends State<QuestionList>{
                                 return;
                               }
                               print(_answerTextControllerList[index].text);
-                              putUserAnswer(context ,widget.questionList[index].id,widget.userInfo.userID,
+                              putUserAnswer(context ,widget.questionList[index].id,
                                   _answerTextControllerList[index].text, 'answer', _token).catchError((e) {
                                   if(e == 'upload fail'){
                                     showMyDialog(context, '오류가 발생하였습니다. 다시한번 시도해주세요!');

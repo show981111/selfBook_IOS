@@ -127,7 +127,7 @@ class _CarouselImageState extends State<CarouselImage> {
                                 return;
                               }
                               showPurchaseDialog(context,templates[_currentPage].templateName+'를 구매하시겠습니까?\n가격 ' + templates[_currentPage].bookPrice + '원'
-                                  ,widget.userInfo.userID ,templates[_currentPage].templateCode);
+                                 ,templates[_currentPage].templateCode);
                             },
                             child : Row(
                               children: <Widget>[

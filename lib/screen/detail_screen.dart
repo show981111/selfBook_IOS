@@ -21,7 +21,6 @@ class _DetailScreen extends State<DetailScreen>{
   @override
   void initState() {
     _data = {
-      'userID' : widget.userInfo.userID,
       'delegateCode' : widget.delegateCode
     };
     print(widget.delegateCode);

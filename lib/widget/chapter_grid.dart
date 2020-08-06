@@ -14,7 +14,7 @@ class ChapterGrid extends StatelessWidget{
   Widget build(BuildContext context) {
     List<Chapter> chapterList;
     return FutureBuilder(
-      future: getChapterList(userInfo.userID, userInfo.userTemplateCode),
+      future: getChapterList( userInfo.userTemplateCode),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if(snapshot.hasData == false && !snapshot.hasError){
           return Center(

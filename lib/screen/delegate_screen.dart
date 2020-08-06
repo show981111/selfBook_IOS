@@ -22,7 +22,6 @@ class _DelegateListScreen extends State<DelegateListScreen>{
   @override
   void initState() {
     _data = {
-      'userID' : widget.userInfo.userID,
       'chapterCode' : widget.chapterCode
     };
     super.initState();

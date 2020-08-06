@@ -20,7 +20,7 @@ class OverView extends StatelessWidget{
       ),
       body :
           FutureBuilder(
-          future: getOverView(userInfo.userID, userInfo.userTemplateCode),
+          future: getOverView( userInfo.userTemplateCode),
           builder: (BuildContext context, AsyncSnapshot snapshot) {
             if(snapshot.hasData == false && !snapshot.hasError){
               return Center(
@@ -78,7 +78,7 @@ class OverView extends StatelessWidget{
                       child: Text('확인'),
                       onPressed: () {
                         Navigator.of(context).pop();
-                        makeDocx(userInfo.userID, userInfo.userTemplateCode).then((value) {
+                        makeDocx(userInfo.userTemplateCode).then((value) {
                           if(value == 'fail'){
                             showMyDialog(context, '원고생성에 실패하였습니다!');
                           }else if(value == 'success'){
@@ -107,14 +107,11 @@ class OverView extends StatelessWidget{
 
 }
 
-Future<String> getOverView(String userID, String templateCode) async {
-//  $userID = $_POST['userID'];
-//  $templateCode = $_POST['templateCode'];
+Future<String> getOverView(String templateCode) async {
 
   final String token = await jwtOrEmpty;
 
   var queryParameters = {
-    'userID' : userID,
     'templateCode' : templateCode,
   };
 
@@ -141,13 +138,12 @@ Future<String> getOverView(String userID, String templateCode) async {
   }
 }
 
-Future<String> makeDocx(String userID, String templateCode) async {
+Future<String> makeDocx( String templateCode) async {
 //  $userID = $_POST['userID'];
 //  $templateCode = $_POST['templateCode'];
   final String token = await jwtOrEmpty;
   print(token);
   Map data = {
-    'userID' : userID,
     'templateCode' : templateCode,
   };
 

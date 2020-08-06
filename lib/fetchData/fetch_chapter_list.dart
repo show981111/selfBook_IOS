@@ -8,12 +8,11 @@ import 'package:selfbookflutter/model/template.dart';
 import 'package:http/http.dart' as http;
 
 
-Future<List<Chapter>> getChapterList(String userID, String templateCode) async{
+Future<List<Chapter>> getChapterList(String templateCode) async{
 
   final String token = await jwtOrEmpty;
 
   var queryParameters = {
-    'userID' : userID,
     'templateCode' : templateCode
   };
   List<Chapter> chapterList = List<Chapter>();

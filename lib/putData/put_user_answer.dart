@@ -5,11 +5,10 @@ import 'package:selfbookflutter/Api/Api.dart';
 import 'package:selfbookflutter/model/template.dart';
 import 'package:http/http.dart' as http;
 
-Future<String> putUserAnswer(BuildContext context ,String key, String userID, String input, String from, String token) async{
+Future<String> putUserAnswer(BuildContext context ,String key, String input, String from, String token) async{
 
   Map data = {
     'key' : key,
-    'userID' : userID,
     'input' : input,
     'from' : from
   };

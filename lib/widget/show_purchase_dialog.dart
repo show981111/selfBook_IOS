@@ -11,7 +11,7 @@ import 'package:toast/toast.dart';
 import 'my_draft_box_silder.dart';
 
 
-Future<void> showPurchaseDialog(BuildContext context, String message,String userID, String templateCode) async {
+Future<void> showPurchaseDialog(BuildContext context, String message, String templateCode) async {
   return showDialog<void>(
     context: context,
     barrierDismissible: true, // user dont have button!
@@ -32,10 +32,10 @@ Future<void> showPurchaseDialog(BuildContext context, String message,String user
           FlatButton(
             child: Text('확인'),
             onPressed: () {
-              purchaseItem(context ,userID, templateCode).then((value){
+              purchaseItem(context, templateCode).then((value){
                 if(value == 'success'){
                   Toast.show('성공적으로 구매하였습니다!', context, duration: Toast.LENGTH_SHORT, gravity: Toast.CENTER);
-                  refetchUserInfo(context ,userID);
+                  refetchUserInfo(context);
                   return;
                 }else if(value == 'already'){
                   Toast.show('이미 구매한 항목입니다!', context, duration: Toast.LENGTH_LONG, gravity: Toast.CENTER);
@@ -62,16 +62,14 @@ Future<void> showPurchaseDialog(BuildContext context, String message,String user
   );
 }
 
-Future<String> purchaseItem(BuildContext context ,String userID, String templateCode) async{
+Future<String> purchaseItem(BuildContext context, String templateCode) async{
 //  $userID = $_POST['userID'];
 //  $templateCode = $_POST['templateCode'];
   String token = await jwtOrEmpty;
   print(token);
   Map data = {
-    'userID' : userID,
     'templateCode' : templateCode,
   };
-  print(userID + templateCode);
   var response = await http.post(API.POST_SETUSERPURCHASE, body: data,headers: {
     'Authorization': 'Bearer ' + token
   });
@@ -89,61 +87,13 @@ Future<String> purchaseItem(BuildContext context ,String userID, String template
   }
 }
 
-//Future<List<UserInfo>> refetchUserInfo(BuildContext context ,String userID) async{
-//  String token = await jwtOrEmpty;
-//  List<UserInfo> res = new List<UserInfo>();
-//
-//  var queryParameters = {
-//    'userID': userID,
-//  };
-//
-//  var uri = Uri.http(API.IP, "/purchases" ,queryParameters);
-//  print(uri);
-//
-//  var response = await http.get(uri, headers: {
-//    'Authorization': 'Bearer ' + token,
-//    'Content-Type': 'application/json',
-//  });
-//
-//  print("response " + response.body);
-//  if(response.statusCode == 200 && response.body.isNotEmpty){
-//
-//    var result = json.decode(response.body);
-//    print('encoded res' + result.toString());
-//
-//    for(int i = 0; i < result.length; i++){
-//      UserInfo userInfoItem = UserInfo.fromJson(result[i]);
-//      res.add(userInfoItem);
-//    }
-//
-//    Navigator.of(context).pushAndRemoveUntil(
-//        MaterialPageRoute(builder:
-//            (BuildContext context) => BoxSlider(userInfoList: res,))
-//        ,(Route<dynamic> route) => false);
-//    return res;
-//
-//  }else if(response.statusCode == 401){
-//    return Future.error('Access Denied');
-//  }else{
-//    return Future.error('loading fail');
-//  }
-//}
 
-
-
-Future<List<UserInfo>> refetchUserInfo(BuildContext context ,String userID) async{
+Future<List<UserInfo>> refetchUserInfo(BuildContext context ) async{
 
   List<UserInfo> res = new List<UserInfo>();
   String token = await jwtOrEmpty;
-  Map data = {
-    'userID' : userID
-  };
 
-  var queryParameters = {
-    'userID': userID,
-  };
-
-  var uri = Uri.http(API.IP, "/purchases" ,queryParameters);
+  var uri = Uri.http(API.IP, "/purchases");
   print(uri);
 
   var response = await http.get(uri, headers: {

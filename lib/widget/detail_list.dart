@@ -57,7 +57,7 @@ class _DetailList extends State<DetailList>{
             icon: Icons.arrow_right,
             closeOnTap: true,
             onTap: () {
-              putUserAnswer(context ,widget.detailList[index].id,widget.userInfo.userID,
+              putUserAnswer(context ,widget.detailList[index].id,
                   'skipped', 'answer', _token).catchError((e) {
                 if(e == 'upload fail'){
                   showMyDialog(context, '오류가 발생하였습니다. 다시한번 시도해주세요!');
@@ -109,7 +109,7 @@ class _DetailList extends State<DetailList>{
                                 return;
                               }
                               print(_answerTextControllerList[index].text);
-                              putUserAnswer(context ,widget.detailList[index].id,widget.userInfo.userID,
+                              putUserAnswer(context ,widget.detailList[index].id,
                                   _answerTextControllerList[index].text, 'answer', _token).catchError((e) {
                                   if(e == 'upload fail'){
                                     showMyDialog(context, '오류가 발생하였습니다. 다시한번 시도해주세요!');

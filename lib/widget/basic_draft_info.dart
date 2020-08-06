@@ -79,7 +79,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                         hintText: "쉼표,",
                         suffixIcon: IconButton(icon: Icon(Icons.send),
                           onPressed: () {
-                            putUserAnswer(context ,widget.userInfo.userTemplateCode, widget.userInfo.userID,
+                            putUserAnswer(context ,widget.userInfo.userTemplateCode,
                                 titleTextController.text , 'setBookTitle', _token).catchError((e) {
                               print("Got error: ${e}");
                               if(e == 'upload fail'){
@@ -198,7 +198,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                             print(documents);
                             String docName = widget.userInfo.userName + '_' +widget.userInfo.userTemplateCode;
                             download2(dio,API.GET_DOWNLOADDOCX, documents.path+'/$docName.docx',
-                                widget.userInfo.userID, widget.userInfo.userTemplateCode, context, _token);
+                                widget.userInfo.userTemplateCode, context, _token);
 
                           }
                         });
@@ -241,14 +241,12 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
     );
   }
 
-  Future download2(Dio dio, String url, String savePath, String userID, String templateCode, BuildContext context, String token) async {
+  Future download2(Dio dio, String url, String savePath, String templateCode, BuildContext context, String token) async {
     try {
       print("token dio " +token);
-      print(userID + templateCode);
       int statusCode;
 
       var queryParameters = {
-        'userID' : userID,
         'templateCode' : templateCode
       };
 

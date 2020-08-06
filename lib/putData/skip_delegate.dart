@@ -6,12 +6,11 @@ import 'package:selfbookflutter/fetchData/get_token.dart';
 import 'package:selfbookflutter/model/template.dart';
 import 'package:http/http.dart' as http;
 
-Future<String> skipDelegate(BuildContext context ,String key, String userID) async{
+Future<String> skipDelegate(BuildContext context ,String key) async{
 
   String token = await jwtOrEmpty;
 
   Map data = {
-    'userID' : userID,
     'delegateCode' : key
   };
 
