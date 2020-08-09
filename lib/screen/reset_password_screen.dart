@@ -62,7 +62,7 @@ class _ResetScreenState extends State<ResetScreen>{
                       suffixIcon: IconButton(icon: Icon(Icons.send),
                         onPressed: () {
                           //send email Auth Code
-                          sendAuth(context, idController.text).then((value) {
+                          sendAuth(context, idController.text, false).then((value) {
                             String response = value;
                             print(response + " vas");
                             if(response =='success'){
@@ -79,7 +79,6 @@ class _ResetScreenState extends State<ResetScreen>{
                             print(e);
                             showMyDialog(context, '오류가 발생하였습니다! 다시한번 시도해주세요!');
                           });
-
                         },
                       )
                   )
@@ -97,7 +96,7 @@ class _ResetScreenState extends State<ResetScreen>{
                       labelText: '인증번호 확인',
                       suffixIcon: IconButton(icon: Icon(Icons.send),
                         onPressed: () {
-                          checkVerificationCode(context, idController.text, verificationController.text).then((value) {
+                          checkVerificationCode(context, idController.text, verificationController.text, false).then((value) {
                             print(value);
                             if(value == 'success'){
                               showMyDialog(context, '성공적으로 인증하였습니다!');
@@ -109,7 +108,7 @@ class _ResetScreenState extends State<ResetScreen>{
                             }else{
                               showMyDialog(context, '인증번호가 일치하지 않습니다!');
                             }
-                          }).catchError((e){showMyDialog(context, '오류가 발생하였습니다! 다시 시도해주세요!');;});
+                          }).catchError((e){showMyDialog(context, '오류가 발생하였습니다! 다시 시도해주세요!');});
 
 
                         },
@@ -199,10 +198,11 @@ class _ResetScreenState extends State<ResetScreen>{
 
 }
 
-Future<String> sendAuth(BuildContext context ,String userID) async{
+Future<String> sendAuth(BuildContext context ,String userID, bool temp) async{
 
   Map data = {
-    'userID' : userID
+    'userID' : userID,
+    'temp' : temp.toString()
   };
   var response = await http.post(API.SEND_AUTH, body: data);
   print(response.body);
@@ -230,11 +230,12 @@ Future<String> resetPW(BuildContext context ,String userID, String userPassword)
   }
 }
 
-Future<String> checkVerificationCode(BuildContext context ,String userID, String code) async{
+Future<String> checkVerificationCode(BuildContext context ,String userID, String code, bool temp) async{
 
   Map data = {
     'userID' : userID,
-    'verificationCode' : code
+    'verificationCode' : code,
+    'temp' : temp.toString()
   };
   var response = await http.post(API.CHECKVERIFICATIONCODE, body: data);
   if(response.statusCode == 200 && response.body.isNotEmpty){

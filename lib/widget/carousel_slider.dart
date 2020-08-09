@@ -59,11 +59,15 @@ class _CarouselImageState extends State<CarouselImage> {
             _currentTitle = templates[_currentPage].templateName;
             _currentPrice = templates[_currentPage].bookPrice;
             for (int i = 0; i < templates.length; i++) {
+              var queryParameters = {
+                'coverName' : templates[i].bookCover
+              };
+              var uri = Uri.http(API.IP, '/getCover',queryParameters);
               networkImages.add(Container(
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(
-                        API.GET_IMAGEBASEURL + templates[i].bookCover),
+                        uri.toString()),
                     fit: BoxFit.fitHeight,
                   ),
 //                   border:

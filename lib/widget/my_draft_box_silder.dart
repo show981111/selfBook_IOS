@@ -95,7 +95,10 @@ List<Widget> makeBoxImages(BuildContext context, List<UserInfo> userInfoList){
   List<Widget> results = [];
   for(int i = 0; i < userInfoList.length; i++)
   {
-
+    var queryParameters = {
+      'coverName' : userInfoList[i].userBookCover
+    };
+    var uri = Uri.http(API.IP, '/getCover',queryParameters);
     results.add(
         InkWell(
           onTap: () {
@@ -110,7 +113,7 @@ List<Widget> makeBoxImages(BuildContext context, List<UserInfo> userInfoList){
             padding: EdgeInsets.only(right: 10),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Image.network(API.GET_IMAGEBASEURL + userInfoList[i].userBookCover),
+              child: Image.network(uri.toString()),
             ),
           ),
         )

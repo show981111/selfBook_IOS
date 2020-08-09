@@ -101,7 +101,9 @@ class _DetailList extends State<DetailList>{
                           //isDense: true,
                           contentPadding:EdgeInsets.fromLTRB(10,0,10,0),
                           labelText: "답변",
-                          hintText: widget.detailList[index].hint,
+                          //hintText: widget.detailList[index].hint,
+                          helperText: 'EX) '+widget.detailList[index].hint,
+                          helperMaxLines: 10,
                           suffixIcon: IconButton(icon: Icon(Icons.send),
                             onPressed: () {
                               if(_answerTextControllerList[index].text.isEmpty){

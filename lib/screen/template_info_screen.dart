@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:selfbookflutter/Api/Api.dart';
 import 'dart:ui';
-
 import 'package:selfbookflutter/model/template.dart';
 import 'package:selfbookflutter/model/userInfo.dart';
 import 'package:selfbookflutter/widget/show_dialog.dart';
@@ -33,7 +32,13 @@ class _TemplateInfoScreen extends State<TemplateInfoScreen> {
                     width: double.maxFinite,
                     decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: NetworkImage(API.GET_IMAGEBASEURL + widget.templateInfo.bookCover),
+//                          var queryParameters = {
+//                          'coverName' : userInfoList[i].userBookCover
+//                          };
+//                          var uri = Uri.http(API.IP, '/getCover',queryParameters);
+                          image: NetworkImage(Uri.http(API.IP, '/getCover',{
+                            'coverName' : widget.templateInfo.bookCover
+                          }).toString()),
                           fit: BoxFit.cover,
                         )
                     ),
@@ -48,7 +53,9 @@ class _TemplateInfoScreen extends State<TemplateInfoScreen> {
                               children: <Widget>[
                                 Container(
                                   padding: EdgeInsets.fromLTRB(0, 45, 0, 10),
-                                  child: Image.network(API.GET_IMAGEBASEURL + widget.templateInfo.bookCover),
+                                  child: Image.network(Uri.http(API.IP, '/getCover',{
+                                    'coverName' : widget.templateInfo.bookCover
+                                  }).toString()),
                                   height: 300,
                                 ),
                                 Container(
