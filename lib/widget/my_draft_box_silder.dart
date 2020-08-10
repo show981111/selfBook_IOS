@@ -23,7 +23,6 @@ class _BoxSlider extends State<BoxSlider>{
   }
   @override
   void initState() {
-    print("BOX called");
     super.initState();
   }
   @override

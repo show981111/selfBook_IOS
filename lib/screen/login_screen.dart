@@ -206,8 +206,8 @@ Future<String> login(BuildContext context ,String userID, String password) async
     'userPassword' : password
   };
   var response = await http.post(API.POST_LOGIN, body: data);
-  print(response.statusCode);
-  print(response.body);
+  //print(response.statusCode);
+  //print(response.body);
   if(response.statusCode == 200 && response.body.isNotEmpty){
     return response.body;
   }else if(response.statusCode == 401){
@@ -232,7 +232,7 @@ Future<List<UserInfo>> getUserInfo(BuildContext context ,String userID) async{
     'Authorization': 'Bearer ' + token,
     'Content-Type': 'application/json',
   });
-  print(response.statusCode.toString() + ' ' + response.body.toString());
+  //print(response.statusCode.toString() + ' ' + response.body.toString());
 
   if(response.statusCode == 200 && response.body.isNotEmpty){
 

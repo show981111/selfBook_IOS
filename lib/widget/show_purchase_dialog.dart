@@ -66,7 +66,7 @@ Future<String> purchaseItem(BuildContext context, String templateCode) async{
 //  $userID = $_POST['userID'];
 //  $templateCode = $_POST['templateCode'];
   String token = await jwtOrEmpty;
-  print(token);
+  //print(token);
   Map data = {
     'templateCode' : templateCode,
   };
@@ -102,7 +102,7 @@ Future<List<UserInfo>> refetchUserInfo(BuildContext context ) async{
   });
   //var response = await http.post(API.GET_USERINFO, body: data);
   if(response.statusCode == 200 && response.body.isNotEmpty){
-    print(response.body);
+    //print(response.body);
 
     var result = json.decode(response.body);
     if(result.length > 0) {
@@ -110,7 +110,7 @@ Future<List<UserInfo>> refetchUserInfo(BuildContext context ) async{
         UserInfo userInfoItem = UserInfo.fromJson(result[i]);
         res.add(userInfoItem);
       }
-      print(res);
+      //print(res);
 
 
       Navigator.of(context).pushAndRemoveUntil(

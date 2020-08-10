@@ -25,6 +25,7 @@ class _MyDraftScreen extends State<MyDraftScreen>{
       initialIndex: 0,
       length: 2,
       child: Scaffold(
+        resizeToAvoidBottomPadding: false,//make view intact when keyboard appears
         appBar: AppBar(
           bottom: TabBar(
             tabs: [

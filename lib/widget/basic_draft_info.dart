@@ -69,7 +69,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               Expanded(
-                flex: 5,
+                flex: 3,
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
@@ -109,7 +109,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                   )
                 ),
               Expanded(
-                  flex: 5,
+                  flex: 3,
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
@@ -129,7 +129,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                   )
               ),
               Expanded(
-                  flex: 5,
+                  flex: 3,
                   child: Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
@@ -149,7 +149,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                   )
               ),
               Expanded(
-                flex: 3,
+                flex: 2,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(8, 5, 8, 0),
                   child: Container(
@@ -179,7 +179,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                 child: Container(),
               ),
               Expanded(
-                flex: 3,
+                flex: 2,
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(8, 5, 8, 0),
                   child: Container(
@@ -209,7 +209,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                 ),
               ),
               Expanded(
-                flex: 14,
+                flex: 8,
                 child: Container(),
               )
                   //Container
@@ -243,7 +243,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
 
   Future download2(Dio dio, String url, String savePath, String templateCode, BuildContext context, String token) async {
     try {
-      print("token dio " +token);
+      //print("token dio " +token);
       int statusCode;
 
       var queryParameters = {

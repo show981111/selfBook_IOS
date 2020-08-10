@@ -125,7 +125,7 @@ class _RegisterScreen extends State<RegisterScreen>{
                               }else{
                                 showMyDialog(context, '인증번호가 일치하지 않습니다!');
                               }
-                            }).catchError((e){showMyDialog(context, '오류가 발생하였습니다! 다시 시도해주세요!');;});
+                            }).catchError((e){showMyDialog(context, '오류가 발생하였습니다! 다시 시도해주세요!');});
 
                           },
                         )

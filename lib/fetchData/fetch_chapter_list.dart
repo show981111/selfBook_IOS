@@ -21,7 +21,7 @@ Future<List<Chapter>> getChapterList(String templateCode) async{
 
   var uri = Uri.http(API.IP, "/chapters" ,queryParameters);
   print(uri);
-  print(token);
+  //print(token);
   var response = await http.get(uri, headers: {
     'Authorization': 'Bearer ' + token,
     'Content-Type': 'application/json',

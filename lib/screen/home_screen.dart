@@ -21,13 +21,13 @@ class _HomeScreenState extends State<HomeScreen>{
   @override
   void initState() {
     super.initState();
-    print("init called");
+    //print("init called");
     jwtOrEmpty.then((value) {
       final parts = value.split('.');
       if (parts.length != 3) {
         throw Exception('invalid token');
       }
-      print(value);
+      //print(value);
       final String res = _decodeBase64(parts[1]);
       final payloadMap = json.decode(res);
       //print("USER " + payloadMap['userID']);
@@ -101,8 +101,8 @@ Future<bool> checkValidity(String token) async{
   var response = await http.post(API.CHECKTOKEN, headers: {
     'Authorization': 'Bearer ' + token
   });
-  print(response.statusCode);
-  print(response.body);
+  //print(response.statusCode);
+  //print(response.body);
   if(response.statusCode == 200 && response.body.isNotEmpty){
     return true;
   }else {

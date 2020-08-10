@@ -93,7 +93,7 @@ class _CarouselImageState extends State<CarouselImage> {
                         enableInfiniteScroll: false,
                         initialPage: 0,
                         onPageChanged : (index, reason) {
-                          print("index " +index.toString());
+                          //print("index " +index.toString());
                           if(index <= templates.length) {
                             setState(() {
                               _currentPage = index;

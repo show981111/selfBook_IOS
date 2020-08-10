@@ -27,7 +27,7 @@ Future<List<Question>> getQuestionList(var data, String type) async{
 
   var uri = Uri.http(API.IP, path,data);
   print(uri);
-  print(token);
+  //print(token);
   var response = await http.get(uri, headers: {
     'Authorization': 'Bearer ' + token,
     'Content-Type': 'application/json',

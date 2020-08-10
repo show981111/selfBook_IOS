@@ -122,10 +122,10 @@ Future<String> getOverView(String templateCode) async {
     'Authorization': 'Bearer ' + token,
     'Content-Type': 'application/json',
   });
-  print(response.statusCode);
+  //print(response.statusCode);
   if (response.statusCode == 200 && response.body.isNotEmpty) {
     var result = response.body;
-    print(result);
+    //print(result);
     if (result != null) {
       return result;
     } else {
@@ -142,7 +142,7 @@ Future<String> makeDocx( String templateCode) async {
 //  $userID = $_POST['userID'];
 //  $templateCode = $_POST['templateCode'];
   final String token = await jwtOrEmpty;
-  print(token);
+  //print(token);
   Map data = {
     'templateCode' : templateCode,
   };
@@ -152,7 +152,7 @@ Future<String> makeDocx( String templateCode) async {
   });
   if(response.statusCode == 200 && response.body.isNotEmpty){
     var result = response.body;
-    print(result);
+    //print(result);
     if(result != null ){
       return result;
     }else{
