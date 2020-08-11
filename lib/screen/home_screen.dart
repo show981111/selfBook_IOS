@@ -18,6 +18,9 @@ class HomeScreen extends StatefulWidget{
 
 class _HomeScreenState extends State<HomeScreen>{
 
+//  String _token = "not set";
+//  String _userID = "not set";
+//  String _userRes = "not set";
   @override
   void initState() {
     super.initState();
@@ -28,18 +31,24 @@ class _HomeScreenState extends State<HomeScreen>{
         throw Exception('invalid token');
       }
       //print(value);
+
       final String res = _decodeBase64(parts[1]);
       final payloadMap = json.decode(res);
-      //print("USER " + payloadMap['userID']);
-//      String userID = res[]
-      getUserInfo(context , payloadMap['data']['userID'].toString()).then((value){
-        if(value != null && value.isNotEmpty){
+//      setState(() {
+//        _userID = payloadMap['data']['userID'];
+//      });
+//      print("USER " + payloadMap['data']['userID']);
+//      print("what?");
+//      print("IAT " + payloadMap.toString());
 
-            widget.userInfoList = value;
-
+      getUserInfo(context , payloadMap['data']['userID'].toString()).then((result){
+        //print("value"+result.toString());
+        if(result != null && result.isNotEmpty){
+            setState(() {
+              widget.userInfoList = result;
+            });
         }
       });
-      print(res);
 //      print("RES "+payloadMap['data']['userID'].toString());
     });
   }
@@ -52,6 +61,7 @@ class _HomeScreenState extends State<HomeScreen>{
           children: <Widget>[
             CarouselImage(userInfo: widget.userInfoList != null &&  widget.userInfoList.length > 0 ?
                 widget.userInfoList[0] : null),
+            //Text(_token + '\n' + _userID + '\n' + _userRes)
           ],
         ),
 //        CircleSlider(movies: movies,),
@@ -69,9 +79,11 @@ class _HomeScreenState extends State<HomeScreen>{
     // TODO: implement didUpdateWidget
     print("called");
     print(oldWidget.userInfoList.toString());
-    setState(() {
-      widget.userInfoList = oldWidget.userInfoList;
-    });
+    if(oldWidget.userInfoList !=null && oldWidget.userInfoList.isNotEmpty ) {
+      setState(() {
+        widget.userInfoList = oldWidget.userInfoList;
+      });
+    }
     super.didUpdateWidget(oldWidget);
   }
 }

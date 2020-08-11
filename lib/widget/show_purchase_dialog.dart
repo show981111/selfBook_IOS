@@ -111,7 +111,7 @@ Future<List<UserInfo>> refetchUserInfo(BuildContext context ) async{
         res.add(userInfoItem);
       }
       //print(res);
-
+      //HomeScreen(userInfoList: res,);
 
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder:
