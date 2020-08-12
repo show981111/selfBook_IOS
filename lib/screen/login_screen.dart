@@ -101,34 +101,34 @@ class _LoginScreenState extends State<LoginScreen>{
                       color: Color.fromRGBO(96, 128, 104, 100),
                       textColor: Colors.white,
                       onPressed: () {
-                        login(context, idController.text, passwordController.text)
-                            .catchError((e) {
+                        login(context, idController.text, passwordController.text).then((value) {
+                          if(value != null && value.isNotEmpty)
+                          {
+                            storage.write(key: "jwt", value: value);
+
+                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
+                                (BuildContext context) => HomeScreen()), (
+                                Route<dynamic> route) => false);//userInfoList: value,userID: userInfoList[0].userID
+//                            getUserInfo(context , idController.text).then((value){
+//                              if(value != null && value.isNotEmpty ){
+//
+//                              }
+//                            }).catchError((e){
+//                              print("error : " + e.toString() );
+//                              if(e == 'Access Denied'){
+//                                showMyDialog(context, '다시 로그인 해주세요!');
+//                              }else{
+//                                print("error here");
+//                                showMyDialog(context, '오류가 발생하였습니다!');
+//                              }
+//                            });
+                          }
+                        }).catchError((e) {
                           print("Got error: ${e}");     // Finally, callback fires.
                           if(e == 'loginFail'){
                             showMyDialog(context, '아이디와 비밀번호를 다시 확인해주세요!');
                           }else{
                             showMyDialog(context, '인터넷 연결을 확인해주세요!');
-                          }
-                        }).then((value) {
-                          if(value != null && value.isNotEmpty)
-                          {
-                            storage.write(key: "jwt", value: value);
-
-                            getUserInfo(context , idController.text).then((value){
-                              if(value != null && value.isNotEmpty){
-                                Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
-                                    (BuildContext context) => HomeScreen(userInfoList: value,)), (
-                                    Route<dynamic> route) => false);
-                              }
-                            }).catchError((e){
-                              print("error : " + e.toString() );
-                              if(e == 'Access Denied'){
-                                showMyDialog(context, '다시 로그인 해주세요!');
-                              }else{
-                                print("error here");
-                                showMyDialog(context, '오류가 발생하였습니다!');
-                              }
-                            });
                           }
                         });
                         //print(e);

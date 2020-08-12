@@ -40,7 +40,8 @@ class _BoxSlider extends State<BoxSlider>{
                 child : Center(
                   child: InkWell(
                     child: Text('탭하여 로그아웃'),
-                    onTap: () {
+                    onTap: () async {
+                      await storage.delete(key: "jwt");
                       Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
                           (BuildContext context) => LoginScreen()), (
                           Route<dynamic> route) => false);

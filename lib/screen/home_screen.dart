@@ -11,44 +11,49 @@ import 'package:selfbookflutter/widget/my_draft_box_silder.dart';
 
 class HomeScreen extends StatefulWidget{
   List<UserInfo> userInfoList = new List<UserInfo>();
-  HomeScreen({this.userInfoList});
+  String userID;
+  HomeScreen({this.userInfoList, this.userID});
 
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen>{
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver{
 
-//  String _token = "not set";
-//  String _userID = "not set";
-//  String _userRes = "not set";
+
+
   @override
   void initState() {
     super.initState();
     //print("init called");
+    WidgetsBinding.instance.addObserver(this);
     jwtOrEmpty.then((value) {
-      final parts = value.split('.');
-      if (parts.length != 3) {
-        throw Exception('invalid token');
-      }
-      //print(value);
+      if(value != null && value.isNotEmpty) {
+        final parts = value.split('.');
+        if (parts.length != 3) {
+          throw Exception('invalid token');
+        }
+        //print(value);
 
-      final String res = _decodeBase64(parts[1]);
-      final payloadMap = json.decode(res);
+        final String res = _decodeBase64(parts[1]);
+        final payloadMap = json.decode(res);
 //      setState(() {
 //        _userID = payloadMap['data']['userID'];
 //      });
 //      print("USER " + payloadMap['data']['userID']);
 //      print("what?");
 //      print("IAT " + payloadMap.toString());
-
-      getUserInfo(context , payloadMap['data']['userID'].toString()).then((result){
-        //print("value"+result.toString());
-        if(result != null && result.isNotEmpty){
+        print("get user in Init called");
+        getUserInfo(context, payloadMap['data']['userID'].toString()).then((
+            result) {
+          //print("value"+result.toString());
+          if (result != null && result.isNotEmpty) {
             setState(() {
               widget.userInfoList = result;
+              widget.userID = payloadMap['data']['userID'];
             });
-        }
-      });
+          }
+        });
+      }
 //      print("RES "+payloadMap['data']['userID'].toString());
     });
   }
@@ -77,7 +82,7 @@ class _HomeScreenState extends State<HomeScreen>{
   @override
   void didUpdateWidget(HomeScreen oldWidget) {//update child widget
     // TODO: implement didUpdateWidget
-    print("called");
+    print("did update called");
     print(oldWidget.userInfoList.toString());
     if(oldWidget.userInfoList !=null && oldWidget.userInfoList.isNotEmpty ) {
       setState(() {
@@ -85,6 +90,34 @@ class _HomeScreenState extends State<HomeScreen>{
       });
     }
     super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // TODO: implement didChangeAppLifecycleState
+    print("life cycle called");
+    if(state == AppLifecycleState.resumed){
+      if(widget.userID != null) {
+        print("get user in lifecycle called" + widget.userID);
+
+        getUserInfo(context, widget.userID).then((result) {
+          //print("value"+result.toString());
+          if (result != null && result.isNotEmpty) {
+            setState(() {
+              widget.userInfoList = result;
+            });
+          }
+        });
+      }
+    }
+    super.didChangeAppLifecycleState(state);
+
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 }
 
