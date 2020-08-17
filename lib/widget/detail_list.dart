@@ -41,7 +41,7 @@ class _DetailList extends State<DetailList>{
   }
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(itemCount:widget.detailList.length ,itemBuilder: (context, index) {
+    return ListView.builder(shrinkWrap: true, itemCount:widget.detailList.length ,itemBuilder: (context, index) {
       _status.add(widget.detailList[index].status);
       _answerTextControllerList.add(new TextEditingController(
           text: widget.detailList[index].answer != null &&  widget.detailList[index].answer.isNotEmpty &&  widget.detailList[index].answer != "null"

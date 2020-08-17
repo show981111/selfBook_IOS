@@ -10,6 +10,8 @@ import 'package:selfbookflutter/screen/detail_screen.dart';
 import 'package:selfbookflutter/widget/show_dialog.dart';
 import 'package:toast/toast.dart';
 
+import 'detail_list.dart';
+
 class QuestionList extends StatefulWidget{
   final List<Question> questionList;
   final UserInfo userInfo;
@@ -43,6 +45,7 @@ class _QuestionList extends State<QuestionList>{
   @override
   Widget build(BuildContext context) {
     return ListView.builder(itemCount:widget.questionList.length ,itemBuilder: (context, index) {
+
       _status.add(widget.questionList[index].status);
       _answerTextControllerList.add(new TextEditingController(
           text: widget.questionList[index].answer != null &&  widget.questionList[index].answer.isNotEmpty &&  widget.questionList[index].answer != "null"
@@ -94,7 +97,37 @@ class _QuestionList extends State<QuestionList>{
             },
           )
         ],
-        child: ListTile(
+        child: ExpansionTile(
+//          leading: IconButton(
+//            icon: Icon(Icons.add),
+//            onPressed: () {
+//              var _data = {
+//                'delegateCode' :widget.questionList[index].id
+//              };
+//
+//              //DetailList(widget.userInfo ,detailList)
+//            },
+//          ),
+          children: <Widget>[
+            FutureBuilder(
+                future: getQuestionList({'delegateCode' :widget.questionList[index].id}, 'detail'),
+                builder: (BuildContext context, AsyncSnapshot snapshot) {
+                  if(snapshot.hasData == false && !snapshot.hasError){
+                    return Center(
+                        child:CircularProgressIndicator()
+                    );
+                  }else if(snapshot.hasError) {
+                    print(snapshot.error);
+                    return Center(
+                        child: Text('인증서에 문제가 발견되었습니다! 다시 로그인해주세요!')
+                    );
+                  }else{
+                    List<Question> detailList = snapshot.data;
+                    return DetailList(widget.userInfo ,detailList);
+                  }
+                }
+            )
+          ],
           //enabled: widget.questionList[index].status == "0" ? true : false,
           title: Container(
 //            color: widget.questionList[index].status == "0" ? null : Colors.white12,
