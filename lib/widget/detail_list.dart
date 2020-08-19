@@ -10,7 +10,7 @@ import 'package:selfbookflutter/widget/show_dialog.dart';
 import 'package:toast/toast.dart';
 
 class DetailList extends StatefulWidget{
-  final List<Question> detailList;
+  List<Question> detailList;
   final UserInfo userInfo;
   DetailList(this.userInfo, this.detailList);
   _DetailList createState() => _DetailList();
@@ -27,7 +27,7 @@ class _DetailList extends State<DetailList>{
   void dispose() {
     for(int i = 0; i < _answerTextControllerList.length; i++)
     {
-      _answerTextControllerList[i].dispose();
+      //_answerTextControllerList[i].dispose();
     }
     super.dispose();
   }
@@ -37,6 +37,7 @@ class _DetailList extends State<DetailList>{
     jwtOrEmpty.then((value){
       _token = value;
     });
+    print("detail List init");
     super.initState();
   }
   @override
@@ -86,7 +87,8 @@ class _DetailList extends State<DetailList>{
                 Text(widget.detailList[index].name,
                   style: TextStyle(color: _status[index] == "0" ? Colors.white : Colors.white12,),),
                 Visibility(
-                  visible: tappedIndex == index ? true : false,
+                  //visible: tappedIndex == index ? true : false,
+                  visible: true,
                   child : Padding(
                     padding: EdgeInsets.only(top: 5),
                     child :
@@ -106,6 +108,7 @@ class _DetailList extends State<DetailList>{
                           helperMaxLines: 10,
                           suffixIcon: IconButton(icon: Icon(Icons.send),
                             onPressed: () {
+                              FocusManager.instance.primaryFocus.unfocus();
                               if(_answerTextControllerList[index].text.isEmpty){
                                 Toast.show('내용이 없습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
                                 return;
@@ -123,6 +126,9 @@ class _DetailList extends State<DetailList>{
                                   Toast.show('성공적으로 업로드하였습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
                                   setState(() {
                                     _status[index] = '1';
+                                    widget.detailList[index].answer = _answerTextControllerList[index].text;
+                                    widget.detailList[index].status = '1';
+                                    print("detail list changed");
                                   });
                                 }
                               });
@@ -138,30 +144,30 @@ class _DetailList extends State<DetailList>{
                     ),
                   ),
               //  ),
-                InkWell(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(color: Colors.white30)
-                        )
-                    ),
-                    width: double.infinity,
-                    child: Center(
-                      child: tappedIndex == index ? Icon(Icons.arrow_drop_up) : Icon(Icons.arrow_drop_down),
-                    ),
-                  ),
-                  onTap: () {
-                    if(tappedIndex == index){
-                      setState(() {
-                        tappedIndex = null;
-                      });
-                    }else{
-                      setState(() {
-                        tappedIndex = index;
-                      });
-                    }
-                  },
-                ),
+//                InkWell(
+//                  child: Container(
+////                    decoration: BoxDecoration(
+////                        border: Border(
+////                            bottom: BorderSide(color: Colors.white30)
+////                        )
+////                    ),
+//                    width: double.infinity,
+//                    child: Center(
+//                      child: tappedIndex == index ? Icon(Icons.arrow_drop_up) : Icon(Icons.arrow_drop_down),
+//                    ),
+//                  ),
+//                  onTap: () {
+//                    if(tappedIndex == index){
+//                      setState(() {
+//                        tappedIndex = null;
+//                      });
+//                    }else{
+//                      setState(() {
+//                        tappedIndex = index;
+//                      });
+//                    }
+//                  },
+//                ),
               ],
             ),
           ),

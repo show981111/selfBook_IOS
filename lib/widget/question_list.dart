@@ -23,9 +23,12 @@ class _QuestionList extends State<QuestionList>{
   //List<Question> questionList = widget.questionList;
   SlidableController slidableController = new SlidableController();
   int tappedIndex;
+  List<int> openedTileList = new List<int>();
   List<TextEditingController> _answerTextControllerList = new List<TextEditingController>();
   List<String> _status = new List<String>();
   String _token;
+
+  List<Question> detailList = new List<Question>();
   @override
   void dispose() {
     for(int i = 0; i < _answerTextControllerList.length; i++)
@@ -55,21 +58,21 @@ class _QuestionList extends State<QuestionList>{
         key: ValueKey(index),
         actionPane: SlidableDrawerActionPane(),
         secondaryActions: <Widget>[
-          IconSlideAction(
-            caption: '더보기',
-            color: Colors.grey.shade300,
-            icon: Icons.more_horiz,
-            closeOnTap: true,
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute<Null>(
-                //fullscreenDialog: true,
-                  builder: (BuildContext context) {
-                    return DetailScreen(
-                        widget.userInfo, widget.questionList[index].id);
-                  }
-              ));
-            }
-          ),
+//          IconSlideAction(
+//            caption: '더보기',
+//            color: Colors.grey.shade300,
+//            icon: Icons.more_horiz,
+//            closeOnTap: true,
+//            onTap: () {
+//              Navigator.of(context).push(MaterialPageRoute<Null>(
+//                //fullscreenDialog: true,
+//                  builder: (BuildContext context) {
+//                    return DetailScreen(
+//                        widget.userInfo, widget.questionList[index].id);
+//                  }
+//              ));
+//            }
+//          ),
           IconSlideAction(
             caption: '스킵',
             color: Colors.grey.shade300,
@@ -98,6 +101,25 @@ class _QuestionList extends State<QuestionList>{
           )
         ],
         child: ExpansionTile(
+          onExpansionChanged: (state) {
+            print(state);
+//            setState(() {
+//              print(index.toString() + "state is changed" + state.toString());
+//              if(state){
+//                tappedIndex = index;
+//                openedTileList.add(index);
+//              }else{
+//                openedTileList.remove(index);
+//                tappedIndex = null;
+//              }
+//            });
+
+          } ,
+          trailing: SizedBox.shrink(),
+          leading: IconButton(
+//            icon: tappedIndex == index ? Icon(Icons.close) : Icon(Icons.add),
+              icon: openedTileList.contains(index) ? Icon(Icons.close) : Icon(Icons.add),
+          ),
 //          leading: IconButton(
 //            icon: Icon(Icons.add),
 //            onPressed: () {
@@ -109,6 +131,49 @@ class _QuestionList extends State<QuestionList>{
 //            },
 //          ),
           children: <Widget>[
+            Padding(
+              padding: EdgeInsets.fromLTRB(4,3,4,0),
+              child : TextField(
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+                controller: _answerTextControllerList[index],
+                decoration: InputDecoration(
+                  //isDense: true,
+                  contentPadding:EdgeInsets.fromLTRB(5,0,5,0),
+                  labelText: "답변",
+                  //hintMaxLines: 30,
+                  helperText: 'EX) '+widget.questionList[index].hint,
+                  helperMaxLines: 10,
+                  suffixIcon: IconButton(icon: Icon(Icons.send),
+                    onPressed: () {
+                      FocusManager.instance.primaryFocus.unfocus();
+                      if(_answerTextControllerList[index].text.isEmpty){
+                        Toast.show('내용이 없습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
+                        return;
+                      }
+                      print(_answerTextControllerList[index].text);
+                      putUserAnswer(context ,widget.questionList[index].id,
+                          _answerTextControllerList[index].text, 'answer', _token).catchError((e) {
+                        if(e == 'upload fail'){
+                          showMyDialog(context, '오류가 발생하였습니다. 다시한번 시도해주세요!');
+                        }else{
+                          showMyDialog(context, '인터넷 연결을 확인해주세요!');
+                        }
+                      }).then((value) {
+                        if(value == 'success'){
+                          Toast.show('성공적으로 업로드하였습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
+                        }
+                      });
+                    },
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(10.0),
+                    ),
+                  ),
+                ),
+              ),
+            ),
             FutureBuilder(
                 future: getQuestionList({'delegateCode' :widget.questionList[index].id}, 'detail'),
                 builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -133,84 +198,98 @@ class _QuestionList extends State<QuestionList>{
 //            color: widget.questionList[index].status == "0" ? null : Colors.white12,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
+//              crossAxisAlignment: c,
               children: <Widget>[
-                Text(widget.questionList[index].name,
-                  style: TextStyle(color: _status[index] == "0" ? Colors.white : Colors.white12,),),
-                Visibility(
-                  visible: tappedIndex == index ? true : false,
-                  child : Padding(
-                    padding: EdgeInsets.only(top: 5),
-                    child :
-//                    SizedBox(
-//                      height : 45,
-//                      child :
-                      TextField(
-                        keyboardType: TextInputType.multiline,
-                        maxLines: null,
-                        controller: _answerTextControllerList[index],
-                        decoration: InputDecoration(
-                          //isDense: true,
-                          contentPadding:EdgeInsets.fromLTRB(10,0,10,0),
-                          labelText: "답변",
-                          //hintMaxLines: 30,
-                          helperText: 'EX) '+widget.questionList[index].hint,
-                          helperMaxLines: 10,
-                          suffixIcon: IconButton(icon: Icon(Icons.send),
-                            onPressed: () {
-                              if(_answerTextControllerList[index].text.isEmpty){
-                                Toast.show('내용이 없습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
-                                return;
-                              }
-                              print(_answerTextControllerList[index].text);
-                              putUserAnswer(context ,widget.questionList[index].id,
-                                  _answerTextControllerList[index].text, 'answer', _token).catchError((e) {
-                                  if(e == 'upload fail'){
-                                    showMyDialog(context, '오류가 발생하였습니다. 다시한번 시도해주세요!');
-                                  }else{
-                                    showMyDialog(context, '인터넷 연결을 확인해주세요!');
-                                  }
-                              }).then((value) {
-                                if(value == 'success'){
-                                  Toast.show('성공적으로 업로드하였습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
-
-                                }
-                              });
-                            },
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.all(
-                              Radius.circular(10.0),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-              //  ),
-                InkWell(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border(
-                            bottom: BorderSide(color: Colors.white30)
-                        )
-                    ),
-                    width: double.infinity,
-                    child: Center(
-                      child: tappedIndex == index ? Icon(Icons.arrow_drop_up) : Icon(Icons.arrow_drop_down),
-                    ),
-                  ),
-                  onTap: () {
-                    if(tappedIndex == index){
-                      setState(() {
-                        tappedIndex = null;
-                      });
-                    }else{
-                      setState(() {
-                        tappedIndex = index;
-                      });
-                    }
-                  },
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(widget.questionList[index].name,
+                    style: TextStyle(color: _status[index] == "0" ? Colors.white : Colors.white12,),),
                 ),
+//                Visibility(
+//                  //visible: tappedIndex == index ? true : false,
+//                 visible: false,
+//                  child : Padding(
+//                    padding: EdgeInsets.only(top: 5),
+//                    child :
+////                    SizedBox(
+////                      height : 45,
+////                      child :
+//                      TextField(
+//                        keyboardType: TextInputType.multiline,
+//                        maxLines: null,
+//                        controller: _answerTextControllerList[index],
+//                        decoration: InputDecoration(
+//                          //isDense: true,
+//                          contentPadding:EdgeInsets.fromLTRB(10,0,10,0),
+//                          labelText: "답변",
+//                          //hintMaxLines: 30,
+//                          helperText: 'EX) '+widget.questionList[index].hint,
+//                          helperMaxLines: 10,
+//                          suffixIcon: IconButton(icon: Icon(Icons.send),
+//                            onPressed: () {
+//                              FocusManager.instance.primaryFocus.unfocus();
+//                              if(_answerTextControllerList[index].text.isEmpty){
+//                                Toast.show('내용이 없습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
+//                                return;
+//                              }
+//                              print(_answerTextControllerList[index].text);
+//                              putUserAnswer(context ,widget.questionList[index].id,
+//                                  _answerTextControllerList[index].text, 'answer', _token).catchError((e) {
+//                                  if(e == 'upload fail'){
+//                                    showMyDialog(context, '오류가 발생하였습니다. 다시한번 시도해주세요!');
+//                                  }else{
+//                                    showMyDialog(context, '인터넷 연결을 확인해주세요!');
+//                                  }
+//                              }).then((value) {
+//                                if(value == 'success'){
+//                                  Toast.show('성공적으로 업로드하였습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
+//
+//                                }
+//                              });
+//                            },
+//                          ),
+//                          border: OutlineInputBorder(
+//                            borderRadius: BorderRadius.all(
+//                              Radius.circular(10.0),
+//                            ),
+//                          ),
+//                        ),
+//                      ),
+//                    ),
+//                  ),
+              //  ),
+//                InkWell(
+//                  child: Container(
+////                    decoration: BoxDecoration(
+////                        border: Border(
+////                            bottom: BorderSide(color: Colors.white30)
+////                        )
+////                    ),
+//                    width: double.infinity,
+//                    child:
+////                    Row(
+////                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+////                      children: <Widget>[
+////                        Text("예시 보기"),
+////                        Text("답변 쓰기"),
+////                      ],
+////                    )
+//                      Center(
+//                      child: tappedIndex == index ? Icon(Icons.arrow_drop_up) : Icon(Icons.arrow_drop_down),
+//                    ),
+//                  ),
+//                  onTap: () {
+//                    if(tappedIndex == index){
+//                      setState(() {
+//                        tappedIndex = null;
+//                      });
+//                    }else{
+//                      setState(() {
+//                        tappedIndex = index;
+//                      });
+//                    }
+//                  },
+//                ),
               ],
             ),
           ),
