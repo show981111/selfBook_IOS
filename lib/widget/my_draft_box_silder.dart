@@ -42,9 +42,15 @@ class _BoxSlider extends State<BoxSlider>{
                     child: Text('탭하여 로그아웃'),
                     onTap: () async {
                       await storage.delete(key: "jwt");
-                      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder:
-                          (BuildContext context) => LoginScreen()), (
-                          Route<dynamic> route) => false);
+                      Navigator.of(context).push(MaterialPageRoute<Null>(
+                          builder: (BuildContext context) {
+                            return LoginScreen();
+                          }
+                      )).then((val){
+                        setState(() {
+                          widget.userInfoList = null;
+                        });
+                      });
                     } ,
                   ),
                 )

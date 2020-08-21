@@ -36,8 +36,6 @@ class _LoginScreenState extends State<LoginScreen>{
   void initState() {
     // TODO: implement initState
     super.initState();
-    print("initState");
-
   }
   @override
   Widget build(BuildContext context) {

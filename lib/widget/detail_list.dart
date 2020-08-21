@@ -27,7 +27,7 @@ class _DetailList extends State<DetailList>{
   void dispose() {
     for(int i = 0; i < _answerTextControllerList.length; i++)
     {
-      //_answerTextControllerList[i].dispose();
+      _answerTextControllerList[i].dispose();
     }
     super.dispose();
   }
@@ -37,7 +37,6 @@ class _DetailList extends State<DetailList>{
     jwtOrEmpty.then((value){
       _token = value;
     });
-    print("detail List init");
     super.initState();
   }
   @override
@@ -53,9 +52,9 @@ class _DetailList extends State<DetailList>{
         actionPane: SlidableDrawerActionPane(),
         secondaryActions: <Widget>[
           IconSlideAction(
-            caption: '스킵',
-            color: Colors.grey.shade300,
-            icon: Icons.arrow_right,
+            caption: '삭제',
+            color: Colors.red,
+            icon: Icons.delete_outline,
             closeOnTap: true,
             onTap: () {
               putUserAnswer(context ,widget.detailList[index].id,
@@ -67,7 +66,7 @@ class _DetailList extends State<DetailList>{
                 }
               }).then((value) {
                 if(value == 'success'){
-                  Toast.show('성공적으로 업로드하였습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
+                  Toast.show('성공적으로 삭제하였습니다!', context,duration : Toast.LENGTH_SHORT,gravity: Toast.CENTER);
                   setState(() {
                     _answerTextControllerList[index].text = 'skipped';
                     _status[index] = "1";
@@ -84,8 +83,11 @@ class _DetailList extends State<DetailList>{
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
-                Text(widget.detailList[index].name,
-                  style: TextStyle(color: _status[index] == "0" ? Colors.white : Colors.white12,),),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(widget.detailList[index].name,
+                    style: TextStyle(color: _status[index] == "0" ? Colors.white : Colors.white12,),),
+                ),
                 Visibility(
                   //visible: tappedIndex == index ? true : false,
                   visible: true,

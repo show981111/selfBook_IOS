@@ -43,6 +43,10 @@ List<Widget> chapterGrid(BuildContext context, List<Chapter> chapterList, UserIn
 
   List<Widget> results = [];
   for(int i = 0; i < chapterList.length; i ++){
+    String title = "CH." + (i+1).toString();
+    if(chapterList[i].name != null && chapterList[i].name.isNotEmpty){
+      title = title + '\n' + chapterList[i].name;
+    }
     results.add(
 //        Stack(
 //          alignment: AlignmentDirectional.center,
@@ -62,7 +66,7 @@ List<Widget> chapterGrid(BuildContext context, List<Chapter> chapterList, UserIn
             margin: const EdgeInsets.all(15.0),
             padding: const EdgeInsets.all(3.0),
             child: Center(
-              child: Text("CH." + (i+1).toString(),
+              child: Text(title,
                 style: TextStyle(fontSize: 20,
                     fontWeight: FontWeight.bold,
                     color: chapterList[i].status == "0" ? Colors.white : Colors.lightGreen

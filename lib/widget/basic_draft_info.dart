@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -68,9 +67,10 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
-              Expanded(
-                flex: 3,
-                  child: Padding(
+//              Expanded(
+//                flex: 3,
+//                  child:
+                  Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
                       controller: titleTextController,
@@ -79,6 +79,7 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                         hintText: "쉼표,",
                         suffixIcon: IconButton(icon: Icon(Icons.send),
                           onPressed: () {
+                            FocusManager.instance.primaryFocus.unfocus();
                             putUserAnswer(context ,widget.userInfo.userTemplateCode,
                                 titleTextController.text , 'setBookTitle', _token).catchError((e) {
                               print("Got error: ${e}");
@@ -106,18 +107,18 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                         ),
                       ),
                     ),
-                  )
+                //  )
                 ),
-              Expanded(
-                  flex: 3,
-                  child: Padding(
+//              Expanded(
+//                  flex: 3,
+//                  child:
+                  Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
                       enabled: false,
                       controller: authorTextController,
                       decoration: InputDecoration(
                         labelText: "글쓴이",
-                        hintText: "미정",
                         disabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(width: 1,color: Colors.white),
                           borderRadius: BorderRadius.all(
@@ -126,18 +127,19 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                         ),
                       ),
                     ),
-                  )
+                //  )
               ),
-              Expanded(
-                  flex: 3,
-                  child: Padding(
+//              Expanded(
+//                  flex: 3,
+//                  child:
+                  Padding(
                     padding: EdgeInsets.all(10),
                     child: TextField(
                       enabled: false,
                       controller: publishDateTextController,
                       decoration: InputDecoration(
-                        labelText: "출판일",
-                        hintText: "미정",
+                        labelText: publishDateTextController.text.isEmpty ? null : "출판일",
+                        hintText: "출판일(최종 제출일로 자동 지정)",
                         disabledBorder: OutlineInputBorder(
                           borderSide: BorderSide(width: 1,color: Colors.white),
                           borderRadius: BorderRadius.all(
@@ -146,72 +148,72 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
                         ),
                       ),
                     ),
-                  )
+                 // )
               ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(8, 5, 8, 0),
-                  child: Container(
-                    width: double.infinity,
-                    child: FlatButton(
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0),
-                      ),
-                      child: Text('원고 미리보기', style: TextStyle(fontSize: 15),),
-                      color: Color.fromRGBO(96, 128, 104, 100),
-                      textColor: Colors.white,
-                      onPressed: () {
-                        return Navigator.of(context).push(MaterialPageRoute<Null>(
-                          //fullscreenDialog: true,
-                            builder: (BuildContext context) {
-                              return OverView(widget.userInfo);
-                            }
-                        ));
-                        //Navigator.of(context).push(MaterialPageRoute())
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(),
-              ),
-              Expanded(
-                flex: 2,
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(8, 5, 8, 0),
-                  child: Container(
-                    width: double.infinity,
-                    child: FlatButton(
-                      shape: new RoundedRectangleBorder(
-                        borderRadius: new BorderRadius.circular(30.0),
-                      ),
-                      child: Text('원고 다운로드', style: TextStyle(fontSize: 15),),
-                      color: Color.fromRGBO(96, 128, 104, 100),
-                      textColor: Colors.white,
-                      onPressed: () async {
-                        _requestPermissions().then((value) async {
-                          if(value == true){
-                            Directory documents = await getApplicationDocumentsDirectory();
-                            print(documents);
-                            String docName = widget.userInfo.userName + '_' +widget.userInfo.userTemplateCode;
-                            download2(dio,API.GET_DOWNLOADDOCX, documents.path+'/$docName.docx',
-                                widget.userInfo.userTemplateCode, context, _token);
-
-                          }
-                        });
-                        //Navigator.of(context).push(MaterialPageRoute())
-                      },
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 8,
-                child: Container(),
-              )
+//              Expanded(
+//                flex: 2,
+//                child: Padding(
+//                  padding: EdgeInsets.fromLTRB(8, 5, 8, 0),
+//                  child: Container(
+//                    width: double.infinity,
+//                    child: FlatButton(
+//                      shape: new RoundedRectangleBorder(
+//                        borderRadius: new BorderRadius.circular(30.0),
+//                      ),
+//                      child: Text('원고 미리보기', style: TextStyle(fontSize: 15),),
+//                      color: Color.fromRGBO(96, 128, 104, 100),
+//                      textColor: Colors.white,
+//                      onPressed: () {
+//                        return Navigator.of(context).push(MaterialPageRoute<Null>(
+//                          //fullscreenDialog: true,
+//                            builder: (BuildContext context) {
+//                              return OverView(widget.userInfo);
+//                            }
+//                        ));
+//                        //Navigator.of(context).push(MaterialPageRoute())
+//                      },
+//                    ),
+//                  ),
+//                ),
+//              ),
+//              Expanded(
+//                flex: 1,
+//                child: Container(),
+//              ),
+//              Expanded(
+//                flex: 2,
+//                child: Padding(
+//                  padding: EdgeInsets.fromLTRB(8, 5, 8, 0),
+//                  child: Container(
+//                    width: double.infinity,
+//                    child: FlatButton(
+//                      shape: new RoundedRectangleBorder(
+//                        borderRadius: new BorderRadius.circular(30.0),
+//                      ),
+//                      child: Text('원고 다운로드', style: TextStyle(fontSize: 15),),
+//                      color: Color.fromRGBO(96, 128, 104, 100),
+//                      textColor: Colors.white,
+//                      onPressed: () async {
+//                        _requestPermissions().then((value) async {
+//                          if(value == true){
+//                            Directory documents = await getApplicationDocumentsDirectory();
+//                            print(documents);
+//                            String docName = widget.userInfo.userName + '_' +widget.userInfo.userTemplateCode;
+//                            download2(dio,API.GET_DOWNLOADDOCX, documents.path+'/$docName.docx',
+//                                widget.userInfo.userTemplateCode, context, _token);
+//
+//                          }
+//                        });
+//                        //Navigator.of(context).push(MaterialPageRoute())
+//                      },
+//                    ),
+//                  ),
+//                ),
+//              ),
+//              Expanded(
+//                flex: 8,
+//                child: Container(),
+//              )
                   //Container
             ],
         ),
@@ -241,85 +243,9 @@ class _BasicDraftInfoState extends State<BasicDraftInfo>{
     );
   }
 
-  Future download2(Dio dio, String url, String savePath, String templateCode, BuildContext context, String token) async {
-    try {
-      //print("token dio " +token);
-      int statusCode;
-
-      var queryParameters = {
-        'templateCode' : templateCode
-      };
-
-      Response response = await dio.get(
-        url,
-        queryParameters: queryParameters,
-        onReceiveProgress:(received, total) {
-          if (total != -1) {
-            if(statusCode == 200) {
-              setState(() {
-                _isLoading = true;
-                _downloadPercent = (received / total * 100).toStringAsFixed(0);
-              });
-              print((received / total * 100).toStringAsFixed(0) + "%");
-            }
-          }
-        },
-        //Received data with List<int>
-        //data : FormData.fromMap(info),
-        options: Options(
-            headers: {
-              'Authorization': 'Bearer ' + token,
-              'Content-Type': 'application/json',
-            },
-            responseType: ResponseType.bytes,
-            followRedirects: false,
-            validateStatus: (status) {
-              statusCode = status;
-              return status < 500;
-            }),
-      );
-
-
-      print(response.headers);
-      //if(response.data.toString())
-      if(statusCode == 200) {
-        File file = File(savePath);
-        var raf = file.openSync(mode: FileMode.write);
-        // response.data is List<int> type
-        raf.writeFromSync(response.data);
-        //print(response.data);
-        await raf.close().then((value){
-
-        });
-      }else if(statusCode == 401){
-        setState(() {
-          _isLoading = false;
-        });
-        showMyDialog(context, '오류가 발생했습니다! 다시 로그인해주세요!');
-      }else{
-        setState(() {
-          _isLoading = false;
-        });
-        showMyDialog(context, '원고를 먼저 생성해주세요!\n방법 : 원고 미리보기 -> 오른쪽 아래 버튼 클릭');
-      }
-    } catch (e) {
-      print('error');
-      print(e);
-    }
-  }
-
 
 }
 
-Future<bool> _requestPermissions() async {
-  var permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
-  print("permission~");
-  if (permission != PermissionStatus.granted) {
-    await PermissionHandler().requestPermissions([PermissionGroup.storage]);
-    permission = await PermissionHandler().checkPermissionStatus(PermissionGroup.storage);
-  }
 
-  return permission == PermissionStatus.granted;
-}
 
 
